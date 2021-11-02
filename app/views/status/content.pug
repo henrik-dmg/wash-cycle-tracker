@@ -1,0 +1,10 @@
+main(class="container-sm")
+  h2 Kraetkestraße Washing Machine Portal
+  div
+    p Wash cycles since last cleaning: #{washCycleCount}
+    if message
+      p #{message}
+    if cta
+      strong #{cta}
+    if errorMessage
+      strong #{errorMessage}

@@ -1,0 +1,19 @@
+body {
+  color: black;
+  background-color: rgb(252, 252, 252);
+}
+
+.overlay {
+  background-color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: white;
+    background-color: black;
+  }
+
+  .overlay {
+    background-color: rgb(31, 31, 31);
+  }
+}
