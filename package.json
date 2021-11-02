@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node server.js"
   },
+  "engines": {
+    "node": "17.x"
+  },
   "author": "Henrik Panhans",
   "license": "MIT",
   "repository": {
