@@ -71,11 +71,11 @@ app.use(express.static(path.join(dirRoot(), 'app', 'public')))
 // - Handling Requests
 
 app.get('/', landingRoute.handleLandingGET)
-app.get('/auth', authRoute.handleIndexGET)
-app.get('/auth/login', authRoute.handleLoginGET)
-app.get('/auth/signup', authRoute.handleSignupGET)
-app.post('/auth/result', authRoute.handleAuthPOST)
-app.get('/status', statusRoute.handleStatusGET)
+// app.get('/auth', authRoute.handleIndexGET)
+// app.get('/auth/login', authRoute.handleLoginGET)
+// app.get('/auth/signup', authRoute.handleSignupGET)
+// app.post('/auth/result', authRoute.handleAuthPOST)
+// app.get('/status', statusRoute.handleStatusGET)
 
 app.listen(PORT, async () => {
   await database.connectToDatabase()
