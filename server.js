@@ -2,7 +2,6 @@ const session = require('express-session')
 const bodyParser = require('body-parser')
 const path = require('path')
 const express = require('express')
-const dirRoot = require('./app/helpers/directory-root')
 const database = require('./app/database/database')
 const authRoute = require('./app/routes/auth-route')
 const statusRoute = require('./app/routes/status-route')
@@ -64,9 +63,9 @@ app.use(
 )
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.set('views', path.join(dirRoot(), 'app', 'views'))
+app.set('views', path.join('.', 'app', 'views'))
 app.set('view engine', 'pug')
-app.use(express.static(path.join(dirRoot(), 'app', 'public')))
+app.use(express.static(path.join('.', 'app', 'public')))
 
 // - Handling Requests
 

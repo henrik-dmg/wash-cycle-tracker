@@ -1,8 +1,6 @@
 const { MongoClient } = require('mongodb')
 const projectConfig = require('../config/project-config')
 
-console.log(process.env.MONGODB_PASSWORD)
-
 const databaseURL = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.ymy6f.mongodb.net/WashLogs?retryWrites=true&w=majority`
 const mongoClient = new MongoClient(databaseURL, {
   useNewUrlParser: true,
