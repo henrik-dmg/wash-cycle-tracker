@@ -1,12 +1,6 @@
-nav(class="navbar sticky-top overlay mb-3 shadow-sm")
+nav(class="navbar sticky-top mb-3 menubar")
   div(class="container-sm")
     a(class="navbar-brand" href="/status")
       img(src="/assets/house.svg" alt="" width="30" height="30")
 if message || warning || error
-  div(class="container-sm")
-    if message
-      div(class="banner p-2 my-1 message-banner") #{message}
-    if warning
-      div(class="banner p-2 my-1 warning-banner") #{warning}
-    if error
-      div(class="banner p-2 my-1 error-banner") #{error}
+  include banners.pug

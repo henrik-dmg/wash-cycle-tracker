@@ -1,15 +1,6 @@
 body {
   color: black;
-  background-color: rgb(252, 252, 252);
-}
-
-.overlay {
-  background-color: #fff;
-}
-
-.banner {
-  background-color: red;
-  border-radius: 4px;
+  background-color: white;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,8 +8,39 @@ body {
     color: white;
     background-color: black;
   }
+}
 
-  .overlay {
-    background-color: rgb(31, 31, 31);
+/* Banners */
+
+.banner {
+  border-radius: 8px;
+}
+
+.message-banner {
+  color: white;
+  background-color: rgb(64, 133, 236);
+}
+
+.warning-banner {
+  background-color: rgb(236, 190, 36);
+}
+
+.error-banner {
+  color: white;
+  background-color: rgb(241, 78, 49);
+}
+
+/* Menubar */
+
+.menubar {
+  color: black;
+  background-color: white;
+  box-shadow: 0 0px 6px rgba(0, 0, 0, 0.178);
+}
+
+@media (prefers-color-scheme: dark) {
+  .menubar {
+    color: white;
+    background-color: black;
   }
 }

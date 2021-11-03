@@ -1,0 +1,7 @@
+div(class="container-sm mb-3")
+  if message
+    div(class="banner p-2 my-1 message-banner") #{message}
+  if warning
+    div(class="banner p-2 my-1 warning-banner") #{warning}
+  if error
+    div(class="banner p-2 my-1 error-banner") #{error}

@@ -4,6 +4,10 @@ handleStatusGET = async (request, response) => {
     return
   }
 
+  var contents = {}
+  if (request.query['state'] == 'authenticationSuccess') {
+    contents['message'] = 'Successfully authenticated'
+  }
   // TODO
   response.render('status/index', contents)
   return

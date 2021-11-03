@@ -85,5 +85,5 @@ function signInUserAndRedirect(user, request, response) {
   console.log('Successfully authenticated. Redirecting to /status')
   request.session.loggedin = true
   request.session.username = user.username
-  response.redirect('/status')
+  response.redirect('/status?state=authenticationSuccess')
 }

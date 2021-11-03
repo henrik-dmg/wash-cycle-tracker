@@ -70,13 +70,7 @@ app.use(express.static(path.join('.', 'app', 'public')))
 // - Handling Requests
 
 app.get('/', landingRoute.handleLandingGET)
-app.get('/banner-test', (request, response) => {
-  response.render('landing/banner-test', {
-    message: 'This is a test message',
-    warning: 'This is a warning message',
-    error: 'This is a error message',
-  })
-})
+app.get('/banner-test', landingRoute.handleBannerTestGET)
 app.get('/auth', authRoute.handleIndexGET)
 app.get('/auth/login', authRoute.handleLoginGET)
 app.get('/auth/signup', authRoute.handleSignupGET)
