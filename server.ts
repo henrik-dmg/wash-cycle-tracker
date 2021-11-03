@@ -19,6 +19,10 @@ var sess = {
   cookie: { secure: false },
 }
 
+if (app.get('env') === 'production' && process.env.USE_SECURE_COOKIES) {
+  sess.cookie.secure = true // serve secure cookies
+}
+
 app.use(session(sess))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
