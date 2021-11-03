@@ -4,7 +4,7 @@ const AuthState = require('../helpers/auth-state')
 
 // - Route Handlers
 
-handleIndexGET = (request, response) => {
+export function handleIndexGET(request, response) {
   if (request.session.loggedin) {
     response.redirect('/status', 302)
   } else {
@@ -12,7 +12,7 @@ handleIndexGET = (request, response) => {
   }
 }
 
-handleLoginGET = (request, response) => {
+export function handleLoginGET(request, response) {
   if (request.session.loggedin) {
     response.redirect('/status', 302)
   } else {
@@ -20,7 +20,7 @@ handleLoginGET = (request, response) => {
   }
 }
 
-handleSignupGET = (request, response) => {
+export function handleSignupGET(request, response) {
   if (request.session.loggedin) {
     response.redirect('/status', 302)
   } else {
@@ -28,7 +28,7 @@ handleSignupGET = (request, response) => {
   }
 }
 
-handleAuthPOST = async (request, response) => {
+export async function handleAuthPOST(request, response) {
   if (request.body.username && request.body.password) {
     if (request.body.passwordVerification) {
       await createNewUserAndHandleResult(request, response)
@@ -39,15 +39,6 @@ handleAuthPOST = async (request, response) => {
     response.send('We should not end up in this state once the form has validation')
     response.end()
   }
-}
-
-// - Exports
-
-module.exports = {
-  handleIndexGET,
-  handleLoginGET,
-  handleSignupGET,
-  handleAuthPOST,
 }
 
 // - Actions

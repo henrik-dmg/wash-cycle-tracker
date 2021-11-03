@@ -703,3 +703,5 @@ MigrationBackup/
 **/*/*credentials.js
 
 data/
+
+distribution/

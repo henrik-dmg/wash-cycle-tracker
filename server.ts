@@ -1,11 +1,11 @@
-const session = require('express-session')
-const bodyParser = require('body-parser')
-const path = require('path')
-const express = require('express')
-const database = require('./app/database/database')
-const authRoute = require('./app/routes/auth-route')
-const statusRoute = require('./app/routes/status-route')
-const landingRoute = require('./app/routes/landing-route')
+import session from 'express-session'
+import bodyParser from 'body-parser'
+import path from 'path'
+import express from 'express'
+import { connectToDatabase } from './app/database/database'
+import * as authRoute from './app/routes/auth-route'
+import * as statusRoute from './app/routes/status-route'
+import * as landingRoute from './app/routes/landing-route'
 
 // - Express Configuration
 
@@ -16,7 +16,7 @@ var sess = {
   secret: 'washing-machine-server-secret-lkasdlkaskld',
   resave: true,
   saveUninitialized: true,
-  cookie: {},
+  cookie: { secure: false },
 }
 
 if (app.get('env') === 'production') {
@@ -60,6 +60,6 @@ app.post('/auth/result', authRoute.handleAuthPOST)
 app.get('/status', statusRoute.handleStatusGET)
 
 app.listen(PORT, async () => {
-  await database.connectToDatabase()
+  await connectToDatabase()
   console.log(`Listening on localhost:${PORT}`)
 })

@@ -1,0 +1,5 @@
+export const loggedIn = 'loggedIn'
+export const signedUp = 'signedUp'
+export const loggedOut = 'loggedOut'
+export const deletedAccount = 'deletedAccount'
+export const alreadySignedIn = 'alreadySignedIn'

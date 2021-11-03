@@ -1,7 +1,7 @@
 const AuthState = require('../helpers/auth-state')
 const washHelpers = require('../helpers/wash-database-helpers')
 
-handleStatusGET = async (request, response) => {
+export async function handleStatusGET(request, response) {
   if (!request.session.loggedin) {
     response.redirect('/auth', 302, { warning: 'Please sign in first' })
     return
@@ -43,5 +43,3 @@ handleStatusGET = async (request, response) => {
       break
   }
 }
-
-module.exports = { handleStatusGET }

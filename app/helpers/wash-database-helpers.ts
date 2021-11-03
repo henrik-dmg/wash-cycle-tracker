@@ -1,14 +1,14 @@
-const database = require('../database/database.js')
+import { database } from '../database/database'
 
-const maxWashCyclesWithoutCleaning = 5
+export const maxWashCyclesWithoutCleaning = 5
 
-logWashCycle = async (request) => {
+export async function logWashCycle(request) {
   const username = request.session.userID
   if (!username) {
     throw 'User is not signed in, should not get to this state'
   }
 
-  const washCollection = database.database.collection(`${username}-wash-cycles`)
+  const washCollection = database.collection(`${username}-wash-cycles`)
   const insertResult = await washCollection.insertOne({
     type: 'wash',
     date: Date.now(),
@@ -16,13 +16,13 @@ logWashCycle = async (request) => {
   console.log('Inserted wash documents =>', insertResult)
 }
 
-logCleanCycle = async (request) => {
+export async function logCleanCycle(request) {
   const username = request.session.userID
   if (!username) {
     throw 'User is not signed in, should not get to this state'
   }
 
-  const cleanCollection = database.database.collection(`${username}-clean-cycles`)
+  const cleanCollection = database.collection(`${username}-clean-cycles`)
   const insertResult = await cleanCollection.insertOne({
     type: 'clean',
     date: Date.now(),
@@ -30,14 +30,14 @@ logCleanCycle = async (request) => {
   console.log('Inserted clean documents =>', insertResult)
 }
 
-numberOfWashCyclesSinceLastCleanCycle = async (request) => {
+export async function numberOfWashCyclesSinceLastCleanCycle(request) {
   const username = request.session.userID
   if (!username) {
     throw 'User is not signed in, should not get to this state'
   }
 
-  const cleanCollection = database.database.collection(`${username}-clean-cycles`)
-  const washCollection = database.database.collection(`${username}-wash-cycles`)
+  const cleanCollection = database.collection(`${username}-clean-cycles`)
+  const washCollection = database.collection(`${username}-wash-cycles`)
   const lastCleanCycle = await cleanCollection.find({}).sort({ date: -1 }).limit(1).toArray()
 
   if (lastCleanCycle[0] === null || lastCleanCycle.length == 0) {
@@ -53,11 +53,4 @@ numberOfWashCyclesSinceLastCleanCycle = async (request) => {
       })
       .count()
   }
-}
-
-module.exports = {
-  maxWashCyclesWithoutCleaning,
-  logWashCycle,
-  logCleanCycle,
-  numberOfWashCyclesSinceLastCleanCycle,
 }

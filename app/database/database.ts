@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb')
+import { Db, MongoClient, MongoClientOptions } from 'mongodb'
 const projectConfig = require('../config/project-config')
 
 const username = process.env.MONGODB_USER
@@ -13,21 +13,11 @@ if (password === undefined) {
 
 const databaseURL = `mongodb+srv://${username}:${password}@cluster0.ymy6f.mongodb.net/WashLogs?retryWrites=true&w=majority`
 
-const mongoClient = new MongoClient(databaseURL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-const database = mongoClient.db(projectConfig.projectName)
-const userCollection = database.collection('users')
+export const mongoClient = new MongoClient(databaseURL)
+export const database: Db = mongoClient.db(projectConfig.projectName)
+export const userCollection = database.collection('users')
 
-connectToDatabase = async () => {
+export const connectToDatabase = async () => {
   await mongoClient.connect()
   console.log('Connected successfully to database server')
-}
-
-module.exports = {
-  mongoClient,
-  database,
-  userCollection,
-  connectToDatabase,
 }

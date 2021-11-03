@@ -4,8 +4,9 @@
   "description": "A utility website that runs locally to notify when to clean your washing machine",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "prestart": "tsc",
+    "start": "node distribution/server.js",
+    "dev": "nodemon distribution/server.js",
     "ui": "browser-sync start --config bs-config.js"
   },
   "engines": {
@@ -25,7 +26,11 @@
     "pug": "^3.0.2"
   },
   "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/express-session": "^1.17.4",
+    "@types/node": "^16.11.6",
     "browser-sync": "^2.27.7",
-    "nodemon": "^2.0.14"
+    "nodemon": "^2.0.14",
+    "typescript": "^4.4.4"
   }
 }
