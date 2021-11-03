@@ -52,12 +52,13 @@ module.exports = {
 // - Actions
 
 async function loginExistingUserAndHandleResult(request, response) {
+  console.log('Attempting to login existing user')
   const user = await databaseHelpers.fetchUser(request.body.username)
   if (user) {
     if (await passwordHelpers.checkPlaintextPassword(request.body.password, user.passwordHash)) {
       signInUserAndRedirect(user, request, response)
     } else {
-      response.render('auth/auth', { title: 'Log in' })
+      response.render('auth/auth', { title: 'Log in', message: 'Wrong password or username. Please try again' })
     }
   } else {
     response.render('auth/auth', { title: 'Log in', message: 'Failed to create user. Please try again' })
@@ -65,6 +66,7 @@ async function loginExistingUserAndHandleResult(request, response) {
 }
 
 async function createNewUserAndHandleResult(request, response) {
+  console.log('Attempting to create new user')
   if (request.session.loggedin) {
     // Already signed in, post CTA and redirect to status
     response.render('auth/signup')
@@ -80,6 +82,7 @@ async function createNewUserAndHandleResult(request, response) {
 }
 
 function signInUserAndRedirect(user, request, response) {
+  console.log('Successfully authenticated. Redirecting to /status')
   request.session.loggedin = true
   request.session.username = user.username
   response.redirect('/status')

@@ -1,7 +1,20 @@
 const { MongoClient } = require('mongodb')
 const projectConfig = require('../config/project-config')
 
-const databaseURL = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.ymy6f.mongodb.net/WashLogs?retryWrites=true&w=majority`
+const username = process.env.MONGODB_USER
+const password = process.env.MONGODB_PASSWORD
+
+if (username === undefined) {
+  throw 'Username not set up'
+}
+if (password === undefined) {
+  throw 'Password not set up'
+}
+
+const databaseURL = `mongodb+srv://${username}:${password}@cluster0.ymy6f.mongodb.net/WashLogs?retryWrites=true&w=majority`
+
+console.log(databaseURL)
+
 const mongoClient = new MongoClient(databaseURL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

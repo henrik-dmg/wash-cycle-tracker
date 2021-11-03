@@ -51,12 +51,12 @@ async function numberOfWashCyclcesSinceLastCleaning() {
 
 // - Express Configuration
 
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 3000
 const app = express()
 
 app.use(
   session({
-    secret: 'secret',
+    secret: 'washing-machine-server-secret-lkasdlkaskld',
     resave: true,
     saveUninitialized: true,
   })
@@ -70,11 +70,18 @@ app.use(express.static(path.join('.', 'app', 'public')))
 // - Handling Requests
 
 app.get('/', landingRoute.handleLandingGET)
-// app.get('/auth', authRoute.handleIndexGET)
-// app.get('/auth/login', authRoute.handleLoginGET)
-// app.get('/auth/signup', authRoute.handleSignupGET)
-// app.post('/auth/result', authRoute.handleAuthPOST)
-// app.get('/status', statusRoute.handleStatusGET)
+app.get('/banner-test', (request, response) => {
+  response.render('landing/banner-test', {
+    message: 'This is a test message',
+    warning: 'This is a warning message',
+    error: 'This is a error message',
+  })
+})
+app.get('/auth', authRoute.handleIndexGET)
+app.get('/auth/login', authRoute.handleLoginGET)
+app.get('/auth/signup', authRoute.handleSignupGET)
+app.post('/auth/result', authRoute.handleAuthPOST)
+app.get('/status', statusRoute.handleStatusGET)
 
 app.listen(PORT, async () => {
   await database.connectToDatabase()
