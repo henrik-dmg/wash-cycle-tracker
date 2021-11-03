@@ -1,31 +1,31 @@
+const AuthState = require('../helpers/auth-state')
+const washHelpers = require('../helpers/wash-database-helpers')
+
 handleStatusGET = async (request, response) => {
   if (!request.session.loggedin) {
-    response.redirect('/auth', 302, { cta: 'Please sign in first' })
+    response.redirect('/auth', 302, { warning: 'Please sign in first' })
     return
   }
 
-  var contents = {}
-  if (request.query['state'] == 'authenticationSuccess') {
-    contents['message'] = 'Successfully authenticated'
-  }
-  // TODO
-  response.render('status/index', contents)
-  return
-
   var contents = { title: 'Home' }
+  const authState = request.query['authState']
+  if (authState == AuthState.loggedIn || authState == AuthState.signedUp) {
+    contents['message'] = 'Successfully logged in'
+  }
+
   switch (request.query['state']) {
     case 'cleaned':
-      await logCleanCycle()
-      contents['washCycleCount'] = await numberOfWashCyclcesSinceLastCleaning()
+      await washHelpers.logCleanCycle(request)
+      contents['washCycleCount'] = await washHelpers.numberOfWashCyclesSinceLastCleanCycle(request)
       console.log(contents['washCycleCount'])
       contents['message'] = 'Your cleaning cycle has been logged. Thank you'
       response.render('status/index', contents)
       break
     case 'washed':
-      await logWashCycle()
-      contents['washCycleCount'] = await numberOfWashCyclcesSinceLastCleaning()
+      await washHelpers.logWashCycle(request)
+      contents['washCycleCount'] = await washHelpers.numberOfWashCyclesSinceLastCleanCycle(request)
       console.log(contents['washCycleCount'])
-      if (contents['washCycleCount'] >= maxWashCyclesWithoutCleaning) {
+      if (contents['washCycleCount'] >= washHelpers.maxWashCyclesWithoutCleaning) {
         contents['message'] = 'Your wash cycle has been logged. Please run the cleaning cycle soon.'
         response.render('status/index', contents)
       } else {
@@ -34,9 +34,9 @@ handleStatusGET = async (request, response) => {
       }
       break
     default:
-      contents['washCycleCount'] = await numberOfWashCyclcesSinceLastCleaning()
+      contents['washCycleCount'] = await washHelpers.numberOfWashCyclesSinceLastCleanCycle(request)
       console.log(contents['washCycleCount'])
-      if (contents['washCycleCount'] >= maxWashCyclesWithoutCleaning) {
+      if (contents['washCycleCount'] >= washHelpers.maxWashCyclesWithoutCleaning) {
         contents['cta'] = 'Please run wash cycle'
       }
       response.render('status/index', contents)

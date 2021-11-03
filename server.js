@@ -7,60 +7,24 @@ const authRoute = require('./app/routes/auth-route')
 const statusRoute = require('./app/routes/status-route')
 const landingRoute = require('./app/routes/landing-route')
 
-// - Express App
-
-// - Constants
-
-const maxWashCyclesWithoutCleaning = 5
-
-// - Helpers
-
-async function logWashCycle() {
-  const insertResult = await washCollection.insertOne({
-    type: 'wash',
-    date: Date.now(),
-  })
-  console.log('Inserted wash documents =>', insertResult)
-}
-
-async function logCleanCycle() {
-  const insertResult = await cleanCollection.insertOne({
-    type: 'clean',
-    date: Date.now(),
-  })
-  console.log('Inserted clean documents =>', insertResult)
-}
-
-async function numberOfWashCyclcesSinceLastCleaning() {
-  const lastCleanCycle = await cleanCollection.find({}).sort({ date: -1 }).limit(1).toArray()
-
-  if (lastCleanCycle[0] === null || lastCleanCycle.length == 0) {
-    console.log('Returning all wash cycles')
-    return await washCollection.count()
-  } else {
-    console.log('Returning filtered cycles')
-    return await washCollection
-      .find({
-        date: {
-          $gte: lastCleanCycle[0].date,
-        },
-      })
-      .count()
-  }
-}
-
 // - Express Configuration
 
 const PORT = process.env.PORT || 3000
 const app = express()
 
-app.use(
-  session({
-    secret: 'washing-machine-server-secret-lkasdlkaskld',
-    resave: true,
-    saveUninitialized: true,
-  })
-)
+var sess = {
+  secret: 'washing-machine-server-secret-lkasdlkaskld',
+  resave: true,
+  saveUninitialized: true,
+  cookie: {},
+}
+
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
+}
+
+app.use(session(sess))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.set('views', path.join('.', 'app', 'views'))

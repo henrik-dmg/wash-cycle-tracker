@@ -1,5 +1,6 @@
 const databaseHelpers = require('../helpers/user-database-helpers')
 const passwordHelpers = require('../helpers/password-helpers')
+const AuthState = require('../helpers/auth-state')
 
 // - Route Handlers
 
@@ -56,7 +57,7 @@ async function loginExistingUserAndHandleResult(request, response) {
   const user = await databaseHelpers.fetchUser(request.body.username)
   if (user) {
     if (await passwordHelpers.checkPlaintextPassword(request.body.password, user.passwordHash)) {
-      signInUserAndRedirect(user, request, response)
+      signInUserAndRedirect(user, AuthState.loggedIn, request, response)
     } else {
       response.render('auth/auth', { title: 'Log in', message: 'Wrong password or username. Please try again' })
     }
@@ -69,21 +70,22 @@ async function createNewUserAndHandleResult(request, response) {
   console.log('Attempting to create new user')
   if (request.session.loggedin) {
     // Already signed in, post CTA and redirect to status
-    response.render('auth/signup')
+    response.redirect('/status?authState=alreadySignedIn')
   } else {
     console.log('Will attempt to create new user')
     const newUser = await databaseHelpers.createUser(request.body.username, request.body.password)
     if (newUser) {
-      signInUserAndRedirect(newUser, request, response)
+      signInUserAndRedirect(newUser, AuthState.signedUp, request, response)
     } else {
       response.redirect('/auth')
     }
   }
 }
 
-function signInUserAndRedirect(user, request, response) {
+function signInUserAndRedirect(user, state, request, response) {
   console.log('Successfully authenticated. Redirecting to /status')
   request.session.loggedin = true
+  request.session.userID = user._id
   request.session.username = user.username
-  response.redirect('/status?state=authenticationSuccess')
+  response.redirect(`/status?authState=${state}`)
 }

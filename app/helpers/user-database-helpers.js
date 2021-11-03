@@ -1,8 +1,8 @@
-const databaseSetup = require('../database/database.js')
+const database = require('../database/database.js')
 const passwordHelpers = require('../helpers/password-helpers')
 
 fetchUser = async (username) => {
-  const userDocument = await databaseSetup.userCollection.findOne({
+  const userDocument = await database.userCollection.findOne({
     username: username,
   })
   return userDocument
@@ -11,7 +11,7 @@ fetchUser = async (username) => {
 createUser = async (username, plainTextPassword) => {
   const encryptedPassword = await passwordHelpers.hashPlaintextPassword(plainTextPassword)
   const newUser = { username: username, passwordHash: encryptedPassword }
-  return await databaseSetup.userCollection.insertOne(newUser)
+  return await database.userCollection.insertOne(newUser)
 }
 
 module.exports = {
