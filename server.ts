@@ -2,25 +2,23 @@ import session from 'express-session'
 import bodyParser from 'body-parser'
 import path from 'path'
 import express from 'express'
-import { connectToDatabase } from './app/database/database'
+import { connectToDatabase, databaseURL } from './app/database/database'
 import * as authRoute from './app/routes/auth-route'
 import * as statusRoute from './app/routes/status-route'
 import * as landingRoute from './app/routes/landing-route'
+import MongoStore from 'connect-mongo'
+import { projectName } from './app/config/project-config'
 
 // - Express Configuration
 
 const PORT = process.env.PORT || 3000
 const app = express()
 
-var sess = {
+const sess = {
   secret: 'washing-machine-server-secret-lkasdlkaskld',
   resave: true,
   saveUninitialized: true,
-  cookie: { secure: false },
-}
-
-if (app.get('env') === 'production' && process.env.USE_SECURE_COOKIES) {
-  sess.cookie.secure = true // serve secure cookies
+  store: MongoStore.create({ mongoUrl: databaseURL, dbName: projectName }),
 }
 
 app.use(session(sess))

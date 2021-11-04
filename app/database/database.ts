@@ -11,7 +11,7 @@ if (password === undefined) {
   throw 'Password not set up'
 }
 
-const databaseURL = `mongodb+srv://${username}:${password}@cluster0.ymy6f.mongodb.net/WashLogs?retryWrites=true&w=majority`
+export const databaseURL = `mongodb+srv://${username}:${password}@cluster0.ymy6f.mongodb.net/WashLogs?retryWrites=true&w=majority`
 
 export const mongoClient = new MongoClient(databaseURL)
 export const database: Db = mongoClient.db(projectConfig.projectName)
