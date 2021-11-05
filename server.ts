@@ -1,8 +1,14 @@
+// - Environment setup
+
+require('dotenv').config()
+
+// - Imports
+
 import session from 'express-session'
 import bodyParser from 'body-parser'
 import path from 'path'
 import express from 'express'
-import { connectToDatabase, databaseURL } from './app/database/database'
+import { connectToDatabase, databaseURL } from './app/services/database'
 import * as authRoute from './app/routes/auth-route'
 import * as statusRoute from './app/routes/status-route'
 import * as landingRoute from './app/routes/landing-route'
