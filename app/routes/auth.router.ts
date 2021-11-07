@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import { AuthState } from '../helpers/authstate'
+import Machine from '../models/machine'
 import { createNewMachine, fetchExistingMachine } from '../services/machine.service'
 import { checkPlaintextPassword } from '../services/password.service'
 
@@ -70,18 +71,24 @@ async function createNewUserAndHandleResult(request, response: Response) {
     response.redirect('/status?authState=alreadySignedIn')
   } else {
     console.log('Will attempt to create new user')
-    const newUser = await createNewMachine(request.body.name, request.body.password)
-    if (newUser) {
-      signInUserAndRedirect(newUser, AuthState.signedUp, request, response)
+    const newMachine = await createNewMachine(request.body.name, request.body.password)
+    if (newMachine) {
+      signInUserAndRedirect(newMachine, AuthState.signedUp, request, response)
     } else {
       response.redirect('/auth')
     }
   }
 }
 
-function signInUserAndRedirect(user, state: AuthState, request, response: Response) {
-  console.log('Successfully authenticated. Redirecting to /status')
-  request.session.loggedin = true
-  request.session.userID = user._id
-  response.redirect(`/status?authState=${state}`)
+function signInUserAndRedirect(machine: Machine, state: AuthState, request: Request, response: Response) {
+  console.log('Regenerating session...')
+  request.session.regenerate((error) => {
+    if (error) {
+      console.error(error)
+      response.render('/auth/auth', { error: 'Something went wrong' })
+    } else {
+      console.log('Successfully authenticated. Redirecting to /status')
+      response.redirect(`/status?authState=${state}`)
+    }
+  })
 }

@@ -5,7 +5,6 @@ require('dotenv').config()
 // - Imports
 
 import session from 'express-session'
-import bodyParser from 'body-parser'
 import path from 'path'
 import express from 'express'
 import * as authRoute from './app/routes/auth.router'
@@ -27,8 +26,9 @@ const sess = {
 }
 
 app.use(session(sess))
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
 app.set('views', path.join('.', 'app', 'views'))
 app.set('view engine', 'pug')
 app.use(express.static(path.join('.', 'app', 'public')))
