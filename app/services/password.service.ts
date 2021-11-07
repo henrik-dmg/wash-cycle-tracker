@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 const saltRounds = 10
 
-export async function hashPlaintextPassword(plaintextPassword) {
+export async function hashPlaintextPassword(plaintextPassword): Promise<string> {
   const encryptedPassword = await bcrypt.hash(plaintextPassword, saltRounds)
   if (encryptedPassword) {
     return encryptedPassword
@@ -10,7 +10,7 @@ export async function hashPlaintextPassword(plaintextPassword) {
   }
 }
 
-export async function checkPlaintextPassword(plaintextPassword, passwordHash) {
+export async function checkPlaintextPassword(plaintextPassword, passwordHash): Promise<boolean> {
   const match = await bcrypt.compare(plaintextPassword, passwordHash)
   if (match) {
     return true
