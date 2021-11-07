@@ -8,12 +8,11 @@ import session from 'express-session'
 import bodyParser from 'body-parser'
 import path from 'path'
 import express from 'express'
-import { connectToDatabase, databaseURL } from './app/services/database'
-import * as authRoute from './app/routes/auth-route'
-import * as statusRoute from './app/routes/status-route'
-import * as landingRoute from './app/routes/landing-route'
+import * as authRoute from './app/routes/auth.router'
+import * as statusRoute from './app/routes/status.router'
+import * as landingRoute from './app/routes/landing.router'
 import MongoStore from 'connect-mongo'
-import { projectName } from './app/config/project-config'
+import * as databaseServices from './app/services/database.service'
 
 // - Express Configuration
 
@@ -24,7 +23,7 @@ const sess = {
   secret: 'washing-machine-server-secret-lkasdlkaskld',
   resave: true,
   saveUninitialized: true,
-  store: MongoStore.create({ mongoUrl: databaseURL, dbName: projectName }),
+  store: MongoStore.create({ mongoUrl: databaseServices.helpers.databaseURL, dbName: process.env.MONGODB_DATABASE_NAME }),
 }
 
 app.use(session(sess))
@@ -63,6 +62,6 @@ app.post('/auth/result', authRoute.handleAuthPOST)
 app.get('/status', statusRoute.handleStatusGET)
 
 app.listen(PORT, async () => {
-  await connectToDatabase()
+  await databaseServices.connectToDatabase()
   console.log(`Listening on localhost:${PORT}`)
 })

@@ -1,4 +1,4 @@
-import { database } from '../database/database'
+import { helpers } from '../services/database.service'
 
 export const maxWashCyclesWithoutCleaning = 5
 
@@ -8,7 +8,7 @@ export async function logWashCycle(request) {
     throw 'User is not signed in, should not get to this state'
   }
 
-  const washCollection = database.collection(`${username}-wash-cycles`)
+  const washCollection = helpers.database.collection(`${username}-wash-cycles`)
   const insertResult = await washCollection.insertOne({
     type: 'wash',
     date: Date.now(),
@@ -22,7 +22,7 @@ export async function logCleanCycle(request) {
     throw 'User is not signed in, should not get to this state'
   }
 
-  const cleanCollection = database.collection(`${username}-clean-cycles`)
+  const cleanCollection = helpers.database.collection(`${username}-clean-cycles`)
   const insertResult = await cleanCollection.insertOne({
     type: 'clean',
     date: Date.now(),
@@ -36,8 +36,8 @@ export async function numberOfWashCyclesSinceLastCleanCycle(request) {
     throw 'User is not signed in, should not get to this state'
   }
 
-  const cleanCollection = database.collection(`${username}-clean-cycles`)
-  const washCollection = database.collection(`${username}-wash-cycles`)
+  const cleanCollection = helpers.database.collection(`${username}-clean-cycles`)
+  const washCollection = helpers.database.collection(`${username}-wash-cycles`)
   const lastCleanCycle = await cleanCollection.find({}).sort({ date: -1 }).limit(1).toArray()
 
   if (lastCleanCycle[0] === null || lastCleanCycle.length == 0) {

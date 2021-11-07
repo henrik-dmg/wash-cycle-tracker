@@ -1,10 +1,18 @@
 const databaseHelpers = require('../helpers/user-database-helpers')
 const passwordHelpers = require('../helpers/password-helpers')
-const AuthState = require('../helpers/auth-state')
+
+import express, { Request, Response } from 'express'
+import * as session from 'express-session'
+import { ObjectId } from 'mongodb'
+import { collections } from '../services/database.service'
+import User from '../models/user'
+import { AuthState } from '../helpers/authstate'
+
+export const authRouter = express.Router()
 
 // - Route Handlers
 
-export function handleIndexGET(request, response) {
+export function handleIndexGET(request: Request, response: Response) {
   if (request.session.loggedin) {
     response.redirect('/status', 302)
   } else {
@@ -12,7 +20,7 @@ export function handleIndexGET(request, response) {
   }
 }
 
-export function handleLoginGET(request, response) {
+export function handleLoginGET(request: Request, response: Response) {
   if (request.session.loggedin) {
     response.redirect('/status', 302)
   } else {
@@ -20,7 +28,7 @@ export function handleLoginGET(request, response) {
   }
 }
 
-export function handleSignupGET(request, response) {
+export function handleSignupGET(request: Request, response: Response) {
   if (request.session.loggedin) {
     response.redirect('/status', 302)
   } else {
@@ -28,7 +36,7 @@ export function handleSignupGET(request, response) {
   }
 }
 
-export async function handleAuthPOST(request, response) {
+export async function handleAuthPOST(request: Request, response: Response) {
   if (request.body.username && request.body.password) {
     if (request.body.passwordVerification) {
       await createNewUserAndHandleResult(request, response)
@@ -43,7 +51,7 @@ export async function handleAuthPOST(request, response) {
 
 // - Actions
 
-async function loginExistingUserAndHandleResult(request, response) {
+async function loginExistingUserAndHandleResult(request: Request, response: Response) {
   console.log('Attempting to login existing user')
   const user = await databaseHelpers.fetchUser(request.body.username)
   if (user) {
@@ -57,7 +65,7 @@ async function loginExistingUserAndHandleResult(request, response) {
   }
 }
 
-async function createNewUserAndHandleResult(request, response) {
+async function createNewUserAndHandleResult(request: Request, response: Response) {
   console.log('Attempting to create new user')
   if (request.session.loggedin) {
     // Already signed in, post CTA and redirect to status
@@ -73,7 +81,7 @@ async function createNewUserAndHandleResult(request, response) {
   }
 }
 
-function signInUserAndRedirect(user, state, request, response) {
+function signInUserAndRedirect(user, state: AuthState, request: Request, response: Response) {
   console.log('Successfully authenticated. Redirecting to /status')
   request.session.loggedin = true
   request.session.userID = user._id
