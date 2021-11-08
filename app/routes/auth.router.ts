@@ -1,8 +1,8 @@
 import express, { Request, Response } from 'express'
 import { AuthState } from '../helpers/authstate'
 import { QueryError } from '../helpers/queryerror'
-import Machine from '../models/machine'
-import { createNewMachine, fetchExistingMachine } from '../services/machine.service'
+import User from '../models/user'
+import { createNewUser, fetchExistingUser } from '../services/user.service'
 import { checkPlaintextPassword } from '../services/password.service'
 
 export const authRouter = express.Router()
@@ -10,7 +10,7 @@ export const authRouter = express.Router()
 // - GET /auth
 
 function getIndexPage(request: Request, response: Response) {
-  if (request.session.machineID) {
+  if (request.session.userID) {
     console.log('Redirecting from /auth to /status since user is already logged in')
     response.redirect('/status', 302)
   } else {
@@ -22,7 +22,7 @@ authRouter.get('/auth/', getIndexPage)
 // - GET /auth/login
 
 function getLoginPage(request: Request, response: Response, contents: {}) {
-  if (request.session.machineID) {
+  if (request.session.userID) {
     console.log('Redirecting from /auth/login to /status since user is already logged in')
     response.redirect('/status')
   } else {
@@ -37,7 +37,7 @@ authRouter.get('/auth/login', (request, response) => {
 // - GET /auth/signup
 
 function getSignupPage(request: Request, response: Response, contents: {}) {
-  if (request.session.machineID) {
+  if (request.session.userID) {
     console.log('Redirecting from /auth/signup to /status since user is already logged in')
     response.redirect('/status')
   } else {
@@ -57,7 +57,7 @@ async function postResult(request: Request, response: Response) {
     if (request.body.passwordVerification) {
       await createNewUserAndHandleResult(request, response)
     } else {
-      await loginExistingMachineAndHandleResult(request, response)
+      await loginExistingUserAndHandleResult(request, response)
     }
   } else {
     response.status(500).send('We should not end up in this state once the form has validation')
@@ -84,14 +84,14 @@ authRouter.get('/auth/signout', getSignout)
 
 // - Actions
 
-async function loginExistingMachineAndHandleResult(request: Request, response: Response) {
+async function loginExistingUserAndHandleResult(request: Request, response: Response) {
   console.log('Attempting to login existing user')
-  const machine = await fetchExistingMachine(request.body.name)
-  if (machine) {
-    if (await checkPlaintextPassword(request.body.password, machine.passwordHash)) {
-      signInUserAndRedirect(machine, AuthState.loggedIn, request, response)
+  const user = await fetchExistingUser(request.body.name)
+  if (user) {
+    if (await checkPlaintextPassword(request.body.password, user.passwordHash)) {
+      signInUserAndRedirect(user, AuthState.loggedIn, request, response)
     } else {
-      renderAuthForm(request, response, { title: 'Log in', error: 'Wrong password or machine name. Please try again' })
+      renderAuthForm(request, response, { title: 'Log in', error: 'Wrong password or user. Please try again' })
     }
   } else {
     renderAuthForm(request, response, { title: 'Log in', error: 'Failed to load user. Please try again' })
@@ -106,9 +106,9 @@ async function createNewUserAndHandleResult(request: Request, response: Response
   } else {
     console.log('Will attempt to create new user')
     try {
-      const newMachine = await createNewMachine(request.body.name, request.body.password)
-      if (newMachine) {
-        signInUserAndRedirect(newMachine, AuthState.signedUp, request, response)
+      const newUser = await createNewUser(request.body.name, request.body.password)
+      if (newUser) {
+        signInUserAndRedirect(newUser, AuthState.signedUp, request, response)
       } else {
         response.redirect('/auth/signup')
       }
@@ -118,7 +118,7 @@ async function createNewUserAndHandleResult(request: Request, response: Response
   }
 }
 
-function signInUserAndRedirect(machine: Machine, state: AuthState, request: Request, response: Response) {
+function signInUserAndRedirect(user: User, state: AuthState, request: Request, response: Response) {
   console.log('Regenerating session...')
   request.session.regenerate((error) => {
     if (error) {
@@ -126,9 +126,9 @@ function signInUserAndRedirect(machine: Machine, state: AuthState, request: Requ
       renderAuthForm(request, response, { error: 'Something went wrong' })
     } else {
       console.log('Successfully authenticated. Redirecting to /status')
-      console.log(machine)
+      console.log(user)
       request.session.loggedIn = true
-      request.session.machineID = machine._id.toString()
+      request.session.userID = user._id.toString()
       response.redirect(`/status?authState=${state}`)
     }
   })

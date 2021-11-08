@@ -3,7 +3,7 @@ import { helpers } from '../services/database.service'
 export const maxWashCyclesWithoutCleaning = 5
 
 export async function logWashCycle(request) {
-  const username = request.session.machineID
+  const username = request.session.userID
   if (!username) {
     throw 'User is not signed in, should not get to this state'
   }
@@ -17,7 +17,7 @@ export async function logWashCycle(request) {
 }
 
 export async function logCleanCycle(request) {
-  const username = request.session.machineID
+  const username = request.session.userID
   if (!username) {
     throw 'User is not signed in, should not get to this state'
   }
@@ -31,7 +31,7 @@ export async function logCleanCycle(request) {
 }
 
 export async function numberOfWashCyclesSinceLastCleanCycle(request) {
-  const username = request.session.machineID
+  const username = request.session.userID
   if (!username) {
     throw 'User is not signed in, should not get to this state'
   }
