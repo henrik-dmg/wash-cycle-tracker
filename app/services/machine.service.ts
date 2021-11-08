@@ -7,6 +7,11 @@ import { hashPlaintextPassword } from './password.service'
  * @throws {Error}
  */
 export async function createNewMachine(name: string, plaintextPassword: string): Promise<Machine> {
+  const existingMachine = await fetchExistingMachine(name)
+  if (existingMachine) {
+    throw "A machine with this name already exists. If you're it's owner, you can sign in"
+  }
+
   const hashedPassword = await hashPlaintextPassword(plaintextPassword)
   const machine = new Machine(name, hashedPassword)
   const result = await collections.washingMachines.insertOne(machine)

@@ -9,13 +9,12 @@ export async function handleStatusGET(request: Request, response: Response) {
     return
   }
 
-  var contents: any = { title: 'Home' }
+  var contents: any = { title: 'Home', loggedIn: request.session.loggedIn }
   const authState = request.query['authState']
   if (authState == AuthState.loggedIn || authState == AuthState.signedUp) {
     contents.message = 'Successfully logged in'
   }
 
-  contents.loggedIn = request.session.loggedIn
   response.render('status/index', contents)
 
   // switch (request.query['state']) {

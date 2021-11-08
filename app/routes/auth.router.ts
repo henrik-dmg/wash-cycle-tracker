@@ -7,49 +7,52 @@ import { checkPlaintextPassword } from '../services/password.service'
 
 export const authRouter = express.Router()
 
-// - Route Handlers
+// - GET /auth
 
-authRouter.get('/auth/', (request, response) => {
+function getIndexPage(request: Request, response: Response) {
   if (request.session.machineID) {
     console.log('Redirecting from /auth to /status since user is already logged in')
     response.redirect('/status', 302)
   } else {
     response.render('auth/index')
   }
-})
+}
+authRouter.get('/auth/', getIndexPage)
 
-authRouter.get('/auth/login', async (request, response) => {
+// - GET /auth/login
+
+function getLoginPage(request: Request, response: Response, contents: {}) {
   if (request.session.machineID) {
     console.log('Redirecting from /auth/login to /status since user is already logged in')
     response.redirect('/status')
   } else {
-    renderAuthForm(request, response, { title: 'Log in' })
+    contents['title'] = 'Log in'
+    renderAuthForm(request, response, contents)
   }
+}
+authRouter.get('/auth/login', (request, response) => {
+  getLoginPage(request, response, {})
 })
 
-authRouter.get('/auth/signup', async (request, response) => {
+// - GET /auth/signup
+
+function getSignupPage(request: Request, response: Response, contents: {}) {
   if (request.session.machineID) {
     console.log('Redirecting from /auth/signup to /status since user is already logged in')
     response.redirect('/status')
   } else {
-    renderAuthForm(request, response, { title: 'Sign up', signup: true })
+    contents['title'] = 'Sign up'
+    contents['signup'] = true
+    renderAuthForm(request, response, contents)
   }
+}
+authRouter.get('/auth/signup', (request, response) => {
+  getSignupPage(request, response, {})
 })
 
-authRouter.get('/auth/signout', (request, response) => {
-  if (!request.session.loggedIn) {
-    response.redirect('/')
-    return
-  }
-  request.session.destroy((error) => {
-    if (error) {
-      console.error(error)
-    }
-    response.redirect('/')
-  })
-})
+// - POST /auth/result
 
-authRouter.post('/auth/result', async (request, response) => {
+async function postResult(request: Request, response: Response) {
   if (request.body.name && request.body.password) {
     if (request.body.passwordVerification) {
       await createNewUserAndHandleResult(request, response)
@@ -60,7 +63,24 @@ authRouter.post('/auth/result', async (request, response) => {
     response.status(500).send('We should not end up in this state once the form has validation')
     response.end()
   }
-})
+}
+authRouter.post('/auth/result', postResult)
+
+// - GET /auth/signout
+
+function getSignout(request: Request, response: Response) {
+  if (!request.session.loggedIn) {
+    response.redirect('/')
+    return
+  }
+  request.session.destroy((error) => {
+    if (error) {
+      console.error(error)
+    }
+    response.redirect('/')
+  })
+}
+authRouter.get('/auth/signout', getSignout)
 
 // - Actions
 
@@ -85,11 +105,15 @@ async function createNewUserAndHandleResult(request: Request, response: Response
     response.redirect(`/auth/signup?authState=${AuthState.invalidCredentials}`)
   } else {
     console.log('Will attempt to create new user')
-    const newMachine = await createNewMachine(request.body.name, request.body.password)
-    if (newMachine) {
-      signInUserAndRedirect(newMachine, AuthState.signedUp, request, response)
-    } else {
-      response.redirect('/auth/signup')
+    try {
+      const newMachine = await createNewMachine(request.body.name, request.body.password)
+      if (newMachine) {
+        signInUserAndRedirect(newMachine, AuthState.signedUp, request, response)
+      } else {
+        response.redirect('/auth/signup')
+      }
+    } catch (error) {
+      getSignupPage(request, response, { error: error })
     }
   }
 }
