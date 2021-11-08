@@ -21,7 +21,7 @@ authRouter.get('/auth/', getIndexPage)
 
 // - GET /auth/login
 
-function getLoginPage(request: Request, response: Response, contents: {}) {
+function getLoginPage(request: Request, response: Response, contents: unknown) {
   if (request.session.userID) {
     console.log('Redirecting from /auth/login to /status since user is already logged in')
     response.redirect('/status')
@@ -36,7 +36,7 @@ authRouter.get('/auth/login', (request, response) => {
 
 // - GET /auth/signup
 
-function getSignupPage(request: Request, response: Response, contents: {}) {
+function getSignupPage(request: Request, response: Response, contents: unknown) {
   if (request.session.userID) {
     console.log('Redirecting from /auth/signup to /status since user is already logged in')
     response.redirect('/status')
@@ -101,7 +101,7 @@ async function loginExistingUserAndHandleResult(request: Request, response: Resp
 async function createNewUserAndHandleResult(request: Request, response: Response) {
   console.log('Creating new user if passwords match')
 
-  if (request.body.passwordVerification != request.body.password) {
+  if (request.body.passwordVerification !== request.body.password) {
     response.redirect(`/auth/signup?authState=${AuthState.invalidCredentials}`)
   } else {
     console.log('Will attempt to create new user')
@@ -135,10 +135,10 @@ function signInUserAndRedirect(user: User, state: AuthState, request: Request, r
 }
 
 function renderAuthForm(request: Request, response: Response, contents?: any) {
-  if (request.query.error == QueryError.generic) {
+  if (request.query.error === QueryError.generic) {
     contents.error = 'Something went wrong. Please try again'
   }
-  if (request.query.authState == AuthState.invalidCredentials) {
+  if (request.query.authState === AuthState.invalidCredentials) {
     contents.error = 'Invalid credentials. Please try again'
   }
   contents.loggedIn = request.session.loggedIn

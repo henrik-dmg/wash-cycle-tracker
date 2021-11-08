@@ -8,7 +8,7 @@
     "outDir": "distribution"
   },
   "lib": [
-    "es2015"
+    "es2021"
   ],
   "include": [
     "app/**/*.ts",

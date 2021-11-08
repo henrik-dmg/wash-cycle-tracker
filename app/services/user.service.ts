@@ -9,14 +9,14 @@ import { hashPlaintextPassword } from './password.service'
 export async function createNewUser(name: string, plaintextPassword: string): Promise<User> {
   const existingUser = await fetchExistingUser(name)
   if (existingUser) {
-    throw "A user with this name already exists. If you're it's owner, you can sign in"
+    throw 'A user with this name already exists. If you\'re it\'s owner, you can sign in'
   }
 
   const hashedPassword = await hashPlaintextPassword(plaintextPassword)
   const user = new User(name, hashedPassword)
   const result = await collections.users.insertOne(user)
   if (result) {
-    user._id = new ObjectId(result.insertedId)
+    user._id = result.insertedId
     return user
   } else {
     throw `Could not create new user with name ${name}`
