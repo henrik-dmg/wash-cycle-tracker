@@ -11,7 +11,7 @@ export async function createNewMachine(name: string, plaintextPassword: string):
   const machine = new Machine(name, hashedPassword)
   const result = await collections.washingMachines.insertOne(machine)
   if (result) {
-    machine.id = result.insertedId
+    machine._id = new ObjectId(result.insertedId)
     return machine
   } else {
     throw `Could not create new machine with name ${name}`
@@ -29,10 +29,10 @@ export async function updatePasswordForMachine(machine: Machine, newPlaintextPas
   const newHashedPassword = await hashPlaintextPassword(newPlaintextPassword)
   const updatedMachine = machine
   updatedMachine.passwordHash = newHashedPassword
-  const updateResult = await collections.washingMachines.findOneAndUpdate({ _id: new ObjectId(machine.id) }, updatedMachine)
+  const updateResult = await collections.washingMachines.findOneAndUpdate({ _id: new ObjectId(machine._id) }, updatedMachine)
   if (updateResult.ok) {
     return updatedMachine
   } else {
-    throw `Could not update password for machine ${machine.id}`
+    throw `Could not update password for machine ${machine._id}`
   }
 }

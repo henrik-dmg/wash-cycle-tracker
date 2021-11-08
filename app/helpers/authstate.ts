@@ -4,4 +4,5 @@ export enum AuthState {
   loggedOut = 'loggedOut',
   deletedAccount = 'deletedAccount',
   alreadySignedIn = 'alreadySignedIn',
+  invalidCredentials = 'invalidCredentials',
 }

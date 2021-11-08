@@ -2,5 +2,18 @@ nav(class="navbar sticky-top mb-3 menubar")
   div(class="container-sm")
     a(class="navbar-brand" href="/status")
       img(src="/assets/house.svg" alt="" width="30" height="30")
+    button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation") nav
+    div(class="collapse navbar-collapse" id="navbarNavDropdown")
+      ul(class="navbar-nav")
+        if loggedIn
+          li(class="nav-item")
+            a(class="nav-link" href="/status") Status
+          li(class="nav-item")
+            a(class="nav-link" href="/auth/signout") Sign out
+        else
+          li(class="nav-item")
+            a(class="nav-link" href="/auth/login") Log in
+          li(class="nav-item")
+            a(class="nav-link" href="/auth/signup") Sign up
 if message || warning || error
   include banners.pug

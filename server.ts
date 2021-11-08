@@ -7,7 +7,7 @@ require('dotenv').config()
 import session from 'express-session'
 import path from 'path'
 import express from 'express'
-import * as authRoute from './app/routes/auth.router'
+import { authRouter } from './app/routes/auth.router'
 import * as statusRoute from './app/routes/status.router'
 import * as landingRoute from './app/routes/landing.router'
 import MongoStore from 'connect-mongo'
@@ -21,7 +21,7 @@ const app = express()
 const sess = {
   secret: 'washing-machine-server-secret-lkasdlkaskld',
   resave: true,
-  saveUninitialized: true,
+  saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: databaseServices.helpers.databaseURL, dbName: process.env.MONGODB_DATABASE_NAME }),
 }
 
@@ -55,10 +55,7 @@ app.use(errorHandler)
 
 app.get('/', landingRoute.handleLandingGET)
 app.get('/banner-test', landingRoute.handleBannerTestGET)
-app.get('/auth', authRoute.handleIndexGET)
-app.get('/auth/login', authRoute.handleLoginGET)
-app.get('/auth/signup', authRoute.handleSignupGET)
-app.post('/auth/result', authRoute.handleAuthPOST)
+app.use(authRouter)
 app.get('/status', statusRoute.handleStatusGET)
 
 app.listen(PORT, async () => {

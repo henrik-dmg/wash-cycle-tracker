@@ -4,17 +4,18 @@ import { Request, Response } from 'express'
 export async function handleStatusGET(request: Request, response: Response) {
   console.log(request.session)
 
-  // if (!request.session.loggedin) {
-  //   response.redirect('/auth', 302, { warning: 'Please sign in first' })
-  //   return
-  // }
-
-  var contents = { title: 'Home' }
-  const authState = request.query['authState']
-  if (authState == AuthState.loggedIn || authState == AuthState.signedUp) {
-    contents['message'] = 'Successfully logged in'
+  if (!request.session.loggedIn) {
+    response.redirect('/auth/')
+    return
   }
 
+  var contents: any = { title: 'Home' }
+  const authState = request.query['authState']
+  if (authState == AuthState.loggedIn || authState == AuthState.signedUp) {
+    contents.message = 'Successfully logged in'
+  }
+
+  contents.loggedIn = request.session.loggedIn
   response.render('status/index', contents)
 
   // switch (request.query['state']) {
