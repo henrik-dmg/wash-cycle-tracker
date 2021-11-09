@@ -1,0 +1,15 @@
+doctype html
+html(lang="en")
+  include ../common/head.pug
+  body
+    include ../common/menubar.pug
+    main(class="container-sm")
+      if user
+        h3 #{user}
+        a(href="/account/changePassword") Change password
+        button(onclick="promptForDeleteConfirmation()") Delete account
+      else
+        h1 500
+        p You should not be able to see this page if you're not signed in. Please send an email to henrik@panhans.dev
+    script(src="scripts/account-delete-confirmation.js" defer)
+    include ../common/bootstrap.pug

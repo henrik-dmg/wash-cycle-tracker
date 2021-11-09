@@ -15,6 +15,7 @@ import * as landingRoute from './app/routes/landing.router'
 import MongoStore from 'connect-mongo'
 import * as databaseServices from './app/services/database.service'
 import { handleError, handleNotFound } from './app/routes/error.router'
+import { accountRouter } from './app/routes/account.router'
 
 // - Express Configuration
 
@@ -40,8 +41,9 @@ app.use(express.static(path.join('.', 'app', 'public')))
 
 app.get('/', landingRoute.handleLandingGET)
 app.get('/banner-test', landingRoute.handleBannerTestGET)
-app.use(authRouter)
 app.get('/status', statusRoute.handleStatusGET)
+app.use(authRouter)
+app.use(accountRouter)
 
 // - Error Handling
 

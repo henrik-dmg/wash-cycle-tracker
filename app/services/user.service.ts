@@ -27,6 +27,10 @@ export async function fetchExistingUser(name: string): Promise<User> {
   return (await collections.users.findOne({ name: name })) as User
 }
 
+export async function fetchExistingUserByID(id: string): Promise<User> {
+  return (await collections.users.findOne({ _id: new ObjectId(id) })) as User
+}
+
 /**
  * @throws {Error}
  */
