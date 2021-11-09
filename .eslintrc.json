@@ -15,6 +15,7 @@
     "eqeqeq": "warn",
     "semi": ["error", "never"],
     "quotes": ["warn", "single"],
-    "curly": "warn"
+    "curly": "warn",
+    "no-undef": "warn"
   }
 }

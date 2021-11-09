@@ -4,5 +4,9 @@ html(lang="en")
   body
     include ../common/menubar.pug
     main(class="container-sm")
-      include auth-form.pug
+      h1 500
+      h2 Internal Server Error
+      p Something went wrong internally. Here's the error message:
+      p #{error}
+      p #{stack}
     include ../common/bootstrap.pug

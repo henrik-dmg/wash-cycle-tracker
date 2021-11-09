@@ -3,9 +3,11 @@ html(lang="en")
   include ../common/head.pug
   body
     include ../common/menubar.pug
-    include content.pug
-    script(
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-      crossorigin="anonymous"
-    )
+    main(class="container-sm")
+      h1 Welcome to washing-machine-server
+      h3 What the hell is this?
+      p I was tired of keeping track of how many wash cycles my washing machine has done without cleanining it. So I made this website
+      h3 Do you know what you're doing?
+      p Not really. Your passwords might be leaking, they might not, who knows. This is like my first web-dev project so bear with me here
+      p Also, huge parts of this thing are not working yet. You might even accidentally crash the server if my code can't handle your input lol
+    include ../common/bootstrap.pug

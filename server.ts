@@ -1,6 +1,8 @@
 // - Environment setup
 
-require('dotenv').config()
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 // - Imports
 
@@ -12,6 +14,7 @@ import * as statusRoute from './app/routes/status.router'
 import * as landingRoute from './app/routes/landing.router'
 import MongoStore from 'connect-mongo'
 import * as databaseServices from './app/services/database.service'
+import { handleError, handleNotFound } from './app/routes/error.router'
 
 // - Express Configuration
 
@@ -33,30 +36,17 @@ app.set('views', path.join('.', 'app', 'views'))
 app.set('view engine', 'pug')
 app.use(express.static(path.join('.', 'app', 'public')))
 
-// - Error Handling
-
-function clientErrorHandler(err, req, res, next) {
-  if (req.xhr) {
-    res.status(500).send({ error: 'Something failed!' })
-  } else {
-    next(err)
-  }
-}
-
-function errorHandler(err, req, res, next) {
-  res.status(500)
-  res.render('error', { error: err })
-}
-
-app.use(clientErrorHandler)
-app.use(errorHandler)
-
 // - Handling Requests
 
 app.get('/', landingRoute.handleLandingGET)
 app.get('/banner-test', landingRoute.handleBannerTestGET)
 app.use(authRouter)
 app.get('/status', statusRoute.handleStatusGET)
+
+// - Error Handling
+
+app.get('*', handleNotFound)
+app.use(handleError)
 
 app.listen(PORT, async () => {
   await databaseServices.connectToDatabase()
