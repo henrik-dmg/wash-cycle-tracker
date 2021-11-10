@@ -45,3 +45,11 @@ export async function updatePasswordForUser(user: User, newPlaintextPassword: st
     throw `Could not update password for user ${user._id}`
   }
 }
+
+export async function deleteUserAndCascade(userID: string) {
+  const result = await collections.users.deleteOne({ _id: userID })
+  if (!result.acknowledged) {
+    throw 'Could not delete user'
+  }
+  // TODO: Cascade machines if this was the last user of machine
+}

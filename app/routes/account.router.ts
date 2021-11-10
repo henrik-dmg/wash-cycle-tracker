@@ -1,5 +1,6 @@
 import express from 'express'
-import { fetchExistingUserByID } from '../services/user.service'
+import { signOutSession } from '../helpers/session.helpers'
+import { deleteUserAndCascade, fetchExistingUserByID } from '../services/user.service'
 
 export const accountRouter = express.Router()
 
@@ -21,7 +22,13 @@ accountRouter.get('/account/changePassword', async (request, response) => {
 
 accountRouter.get('/account/deleteAccount', async (request, response) => {
   if (request.session.userID) {
-    await fetchAndDisplayCurrentUser(request, response)
+    try {
+      await deleteUserAndCascade(request.session.userID)
+      signOutSession(request)
+      response.redirect('/')
+    } catch (error) {
+      response.redirect('/account')
+    }
   } else {
     response.redirect('/auth')
   }

@@ -1,9 +1,8 @@
 import { AuthState } from '../helpers/authstate'
 import { Request, Response } from 'express'
+import { customRender } from '../helpers/customrender'
 
 export async function handleStatusGET(request: Request, response: Response) {
-  console.log(request.session)
-
   if (!request.session.loggedIn) {
     response.redirect('/auth/')
     return
@@ -15,7 +14,7 @@ export async function handleStatusGET(request: Request, response: Response) {
     contents['message'] = 'Successfully logged in'
   }
 
-  response.render('status/index', contents)
+  customRender('status/index', request, response, contents)
 
   // switch (request.query['state']) {
   //   case 'cleaned':

@@ -6,30 +6,27 @@ dotenv.config()
 
 // - Imports
 
-import session from 'express-session'
 import path from 'path'
 import express from 'express'
 import { authRouter } from './app/routes/auth.router'
 import * as statusRoute from './app/routes/status.router'
 import * as landingRoute from './app/routes/landing.router'
-import MongoStore from 'connect-mongo'
 import * as databaseServices from './app/services/database.service'
 import { handleError, handleNotFound } from './app/routes/error.router'
 import { accountRouter } from './app/routes/account.router'
+import cookieSession from 'cookie-session'
 
 // - Express Configuration
 
 const PORT = process.env.PORT || 3000
 const app = express()
 
-const sess = {
-  secret: 'washing-machine-server-secret-lkasdlkaskld',
-  resave: true,
-  saveUninitialized: false,
-  store: MongoStore.create({ mongoUrl: databaseServices.helpers.databaseURL, dbName: process.env.MONGODB_DATABASE_NAME }),
+const session = {
+  keys: ['washing-machine-server-secret-lkasdlkaskld', 'and-another-secret', 'yeah-and-one-more'],
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }
 
-app.use(session(sess))
+app.use(cookieSession(session))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

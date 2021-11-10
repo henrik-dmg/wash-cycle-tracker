@@ -4,6 +4,8 @@ import { QueryError } from '../helpers/queryerror'
 import User from '../models/user'
 import { createNewUser, fetchExistingUser } from '../services/user.service'
 import { checkPlaintextPassword } from '../services/password.service'
+import { signInSession, signOutSession } from '../helpers/session.helpers'
+import { customRender } from '../helpers/customrender'
 
 export const authRouter = express.Router()
 
@@ -12,9 +14,9 @@ export const authRouter = express.Router()
 function getIndexPage(request: Request, response: Response) {
   if (request.session.userID) {
     console.log('Redirecting from /auth to /status since user is already logged in')
-    response.redirect('/status', 302)
+    response.redirect(`/status?authState=${AuthState.alreadySignedIn}`)
   } else {
-    response.render('auth/index')
+    customRender('auth/index', request, response)
   }
 }
 authRouter.get('/auth/', getIndexPage)
@@ -24,7 +26,7 @@ authRouter.get('/auth/', getIndexPage)
 function getLoginPage(request: Request, response: Response, contents: unknown) {
   if (request.session.userID) {
     console.log('Redirecting from /auth/login to /status since user is already logged in')
-    response.redirect('/status')
+    response.redirect(`/status?authState=${AuthState.alreadySignedIn}`)
   } else {
     contents['title'] = 'Log in'
     renderAuthForm(request, response, contents)
@@ -39,7 +41,7 @@ authRouter.get('/auth/login', (request, response) => {
 function getSignupPage(request: Request, response: Response, contents: unknown) {
   if (request.session.userID) {
     console.log('Redirecting from /auth/signup to /status since user is already logged in')
-    response.redirect('/status')
+    response.redirect(`/status?authState=${AuthState.alreadySignedIn}`)
   } else {
     contents['title'] = 'Sign up'
     contents['signup'] = true
@@ -73,12 +75,8 @@ function getSignout(request: Request, response: Response) {
     response.redirect('/')
     return
   }
-  request.session.destroy((error) => {
-    if (error) {
-      console.error(error)
-    }
-    response.redirect('/')
-  })
+  signOutSession(request)
+  response.redirect('/')
 }
 authRouter.get('/auth/signout', getSignout)
 
@@ -119,19 +117,9 @@ async function createNewUserAndHandleResult(request: Request, response: Response
 }
 
 function signInUserAndRedirect(user: User, state: AuthState, request: Request, response: Response) {
-  console.log('Regenerating session...')
-  request.session.regenerate((error) => {
-    if (error) {
-      console.error(error)
-      renderAuthForm(request, response, { error: 'Something went wrong' })
-    } else {
-      console.log('Successfully authenticated. Redirecting to /status')
-      console.log(user)
-      request.session.loggedIn = true
-      request.session.userID = user._id.toString()
-      response.redirect(`/status?authState=${state}`)
-    }
-  })
+  signInSession(user, request)
+  console.log('Successfully authenticated. Redirecting to /status')
+  response.redirect(`/status?authState=${state}`)
 }
 
 function renderAuthForm(request: Request, response: Response, contents?: any) {
@@ -142,5 +130,5 @@ function renderAuthForm(request: Request, response: Response, contents?: any) {
     contents.error = 'Invalid credentials. Please try again'
   }
   contents.loggedIn = request.session.loggedIn
-  response.render('auth/auth', contents)
+  customRender('auth/auth', request, response, contents)
 }
