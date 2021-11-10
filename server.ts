@@ -15,9 +15,11 @@ import * as databaseServices from './app/services/database.service'
 import { handleError, handleNotFound } from './app/routes/error.router'
 import { accountRouter } from './app/routes/account.router'
 import cookieSession from 'cookie-session'
+import { renderSassAndWriteToPublicDirectory } from './app/services/sass.service'
 
 // - Express Configuration
 
+const publicDirectory = path.join('.', 'app', 'public')
 const PORT = process.env.PORT || 3000
 const app = express()
 
@@ -32,7 +34,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.set('views', path.join('.', 'app', 'views'))
 app.set('view engine', 'pug')
-app.use(express.static(path.join('.', 'app', 'public')))
+app.use(express.static(publicDirectory))
 
 // - Handling Requests
 
@@ -48,6 +50,13 @@ app.get('*', handleNotFound)
 app.use(handleError)
 
 app.listen(PORT, async () => {
+  console.log('Compiling SCSS...')
+  await renderSassAndWriteToPublicDirectory()
+  console.log('Successfully compiled SCSS')
+
+  console.log('Connecting to database...')
   await databaseServices.connectToDatabase()
-  console.log(`Listening on localhost:${PORT}`)
+  console.log('Successfully connected to database')
+
+  console.log(`Listening on http://localhost:${PORT}`)
 })
