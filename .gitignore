@@ -705,3 +705,5 @@ MigrationBackup/
 data/
 
 distribution/
+
+app/public/**/*.css
