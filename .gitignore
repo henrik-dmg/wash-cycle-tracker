@@ -707,3 +707,4 @@ data/
 distribution/
 
 app/public/**/*.css
+app/public/**/*.css.map
