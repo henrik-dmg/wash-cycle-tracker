@@ -10,7 +10,7 @@ import path from 'path'
 import express from 'express'
 import { authRouter } from './app/routes/auth.router'
 import * as statusRoute from './app/routes/status.router'
-import * as landingRoute from './app/routes/landing.router'
+import { staticRouter } from './app/routes/static.router'
 import * as databaseServices from './app/services/database.service'
 import { handleError, handleNotFound } from './app/routes/error.router'
 import { accountRouter } from './app/routes/account.router'
@@ -38,9 +38,8 @@ app.use(express.static(publicDirectory))
 
 // - Handling Requests
 
-app.get('/', landingRoute.handleLandingGET)
-app.get('/banner-test', landingRoute.handleBannerTestGET)
 app.get('/status', statusRoute.handleStatusGET)
+app.get((staticRouter)
 app.use(authRouter)
 app.use(accountRouter)
 

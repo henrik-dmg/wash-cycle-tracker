@@ -700,8 +700,6 @@ MigrationBackup/
 
 .idea/
 
-**/*/*credentials.js
-
 data/
 
 distribution/
