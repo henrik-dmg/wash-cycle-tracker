@@ -39,7 +39,7 @@ app.use(express.static(publicDirectory))
 // - Handling Requests
 
 app.get('/status', statusRoute.handleStatusGET)
-app.get((staticRouter)
+app.use(staticRouter)
 app.use(authRouter)
 app.use(accountRouter)
 
