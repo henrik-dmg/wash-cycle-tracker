@@ -5,8 +5,8 @@ import { writeFile } from 'fs'
 export async function renderSassAndWriteToPublicDirectory() {
   const renderPromise = promisify(sass.render)
   const result = await renderPromise({
-    file: `${process.cwd()}/app/styles/common.scss`,
-    outFile: `${process.cwd()}/app/public/styles/common.css`,
+    file: './app/styles/common.scss',
+    outFile: './app/public/styles/common.css',
     sourceMap: true,
     sourceMapContents: true,
     outputStyle: 'compressed',
@@ -14,6 +14,6 @@ export async function renderSassAndWriteToPublicDirectory() {
   })
 
   const writeFilePromise = promisify(writeFile)
-  await writeFilePromise(`${process.cwd()}/app/public/styles/common.css`, result.css, 'utf8')
-  await writeFilePromise(`${process.cwd()}/app/public/styles/common.css.map`, result.map, 'utf8')
+  await writeFilePromise('./app/public/styles/common.css', result.css, 'utf8')
+  await writeFilePromise('./app/public/styles/common.css.map', result.map, 'utf8')
 }
