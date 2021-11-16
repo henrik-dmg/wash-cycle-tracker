@@ -9,13 +9,13 @@ dotenv.config()
 import path from 'path'
 import express from 'express'
 import { authRouter } from './app/routes/auth.router'
-import * as statusRoute from './app/routes/status.router'
+import { statusRouter } from './app/routes/status.router'
 import { staticRouter } from './app/routes/static.router'
 import * as databaseServices from './app/services/database.service'
 import { handleError, handleNotFound } from './app/routes/error.router'
 import { accountRouter } from './app/routes/account.router'
-import cookieSession from 'cookie-session'
 import { renderSassAndWriteToPublicDirectory } from './app/services/sass.service'
+import { authMiddleware } from './app/middleware/auth.middleware'
 
 // - Express Configuration
 
@@ -23,12 +23,6 @@ const publicDirectory = path.join('.', 'app', 'public')
 const PORT = process.env.PORT || 3000
 const app = express()
 
-const session = {
-  keys: ['washing-machine-server-secret-lkasdlkaskld', 'and-another-secret', 'yeah-and-one-more'],
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours
-}
-
-app.use(cookieSession(session))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -36,9 +30,13 @@ app.set('views', path.join('.', 'app', 'views'))
 app.set('view engine', 'pug')
 app.use(express.static(publicDirectory))
 
+// - Auth Setup
+
+app.use(authMiddleware)
+
 // - Handling Requests
 
-app.get('/status', statusRoute.handleStatusGET)
+app.use(statusRouter)
 app.use(staticRouter)
 app.use(authRouter)
 app.use(accountRouter)

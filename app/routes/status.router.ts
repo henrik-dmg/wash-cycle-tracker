@@ -1,14 +1,13 @@
 import { AuthState } from '../helpers/authstate'
-import { Request, Response } from 'express'
+import * as express from 'express'
 import { customRender } from '../helpers/customrender'
+import { requiresAuth } from 'express-openid-connect'
 
-export async function handleStatusGET(request: Request, response: Response) {
-  if (!request.session.loggedIn) {
-    response.redirect('/auth/')
-    return
-  }
+export const statusRouter = express.Router()
 
-  const contents = { title: 'Home', loggedIn: request.session.loggedIn }
+statusRouter.get('/status', requiresAuth(), async (request, response) => {
+  console.log(`${request.oidc.user?.name}`)
+  const contents = { title: 'Home', loggedIn: true }
   const authState = request.query['authState']
   if (authState === AuthState.loggedIn || authState === AuthState.signedUp) {
     contents['message'] = 'Successfully logged in'
@@ -45,4 +44,4 @@ export async function handleStatusGET(request: Request, response: Response) {
   //     response.render('status/index', contents)
   //     break
   // }
-}
+})
