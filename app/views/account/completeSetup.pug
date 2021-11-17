@@ -1,0 +1,36 @@
+doctype html
+html(lang="en")
+  include ../common/head.pug
+  body
+    include ../common/menubar.pug
+    main(class="container-sm")
+      h2 Complete setup
+      p To complete your account setup, either link your account to an existing machine or create a new one
+      h3 Join an existing machine
+      p To join a machine, please ask one of the machine's users to provide you with its 8 character access code and name
+      form(action="joinMachine" method="POST")
+        div
+          b Machine name
+          br
+          label(for="name")
+          input(type="text" name="name" placeholder="Machine name" required)
+        br
+        div
+          b Verification Code
+          br
+          label(for="verificationCode")
+          input(type="text" name="verificationCode" placeholder="Verification Code" required)
+        br
+        input(type="submit")
+      br
+      h3 Create a new machine
+      p To create new machine, please enter a name for it
+      form(action="createMachine" method="POST")
+        div
+          b Machine name
+          br
+          label(for="name")
+          input(type="text" name="name" placeholder="Machine name" required)
+        br
+        input(type="submit")
+    include ../common/bootstrap.pug

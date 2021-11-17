@@ -6,7 +6,7 @@ import { requiresAuth } from 'express-openid-connect'
 export const statusRouter = express.Router()
 
 statusRouter.get('/status', requiresAuth(), async (request, response) => {
-  console.log(`${request.oidc.user?.name}`)
+  console.log(JSON.stringify(request.oidc.user, null, 4))
   const contents = { title: 'Home', loggedIn: true }
   const authState = request.query['authState']
   if (authState === AuthState.loggedIn || authState === AuthState.signedUp) {

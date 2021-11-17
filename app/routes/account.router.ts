@@ -1,11 +1,16 @@
-import express from 'express'
+import express, { response } from 'express'
 import { requiresAuth } from 'express-openid-connect'
-import { deleteUserAndCascade, fetchExistingUserByID } from '../services/user.service'
+import { fetchExistingUserByID } from '../services/user.service'
 
 export const accountRouter = express.Router()
 
 accountRouter.get('/account', requiresAuth(), async (request, response) => {
   await fetchAndDisplayCurrentUser(request, response)
+})
+
+accountRouter.get('/account/completeSetup', requiresAuth(), async (request, response) => {
+  // TODO
+  response.render('account/completeSetup')
 })
 
 accountRouter.get('/account/changePassword', requiresAuth(), async (request, response) => {

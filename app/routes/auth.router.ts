@@ -4,9 +4,9 @@ export const authRouter = express.Router()
 
 // - GET /
 
-authRouter.get('/login', (req, res) => res.oidc.login({ returnTo: '/status' }))
+authRouter.get('/login', (req, res) => res.oidc.login({ returnTo: '/account/completeSetup' }))
 
-// - GET /auth/callback
+// - GET /callback
 
 authRouter.get('/callback', (request, response) => {
   console.log('We\'re getting GET callback lol')
