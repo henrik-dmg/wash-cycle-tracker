@@ -6,7 +6,7 @@ import { hashPlaintextPassword } from './password.service'
 /**
  * @throws {Error}
  */
-export async function createNewUser(name: string, plaintextPassword: string): Promise<User> {
+export async function createNewDatabaseUser(name: string, plaintextPassword: string): Promise<User> {
   const existingUser = await fetchExistingUser(name)
   if (existingUser) {
     throw 'A user with this name already exists. If you\'re it\'s owner, you can sign in'
@@ -44,12 +44,4 @@ export async function updatePasswordForUser(user: User, newPlaintextPassword: st
   } else {
     throw `Could not update password for user ${user._id}`
   }
-}
-
-export async function deleteUserAndCascade(userID: string) {
-  const result = await collections.users.deleteOne({ _id: userID })
-  if (!result.acknowledged) {
-    throw 'Could not delete user'
-  }
-  // TODO: Cascade machines if this was the last user of machine
 }
