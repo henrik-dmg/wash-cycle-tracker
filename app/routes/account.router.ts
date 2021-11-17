@@ -1,6 +1,7 @@
 import express, { response } from 'express'
 import { requiresAuth } from 'express-openid-connect'
-import { fetchExistingUserByID } from '../services/user.service'
+import { asyncQuery, sqlConnection } from '../services/database.service'
+import { createNewDatabaseUser, fetchExistingUserByID } from '../services/user.service'
 
 export const accountRouter = express.Router()
 
@@ -8,9 +9,17 @@ accountRouter.get('/account', requiresAuth(), async (request, response) => {
   await fetchAndDisplayCurrentUser(request, response)
 })
 
-accountRouter.get('/account/completeSetup', requiresAuth(), async (request, response) => {
-  // TODO
-  response.render('account/completeSetup')
+accountRouter.get('/account/completeSetup', requiresAuth(), async (request, response, next) => {
+  const user = await fetchExistingUserByID(request.oidc.user.sub)
+  console.log(user)
+  if (user) {
+    response.redirect('/status')
+  } else {
+    console.log('Creating new user')
+    const newUser = await createNewDatabaseUser(request.oidc, 1)
+    console.log(newUser)
+    response.render('account/completeSetup')
+  }
 })
 
 accountRouter.get('/account/changePassword', requiresAuth(), async (request, response) => {

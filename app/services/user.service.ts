@@ -1,47 +1,22 @@
-import { ObjectId } from 'bson'
 import User from '../models/user'
-import { collections } from './database.service'
-import { hashPlaintextPassword } from './password.service'
+import { asyncQuery} from './database.service'
+import { RequestContext } from 'express-openid-connect'
 
-/**
- * @throws {Error}
- */
-export async function createNewDatabaseUser(name: string, plaintextPassword: string): Promise<User> {
-  const existingUser = await fetchExistingUser(name)
-  if (existingUser) {
-    throw 'A user with this name already exists. If you\'re it\'s owner, you can sign in'
-  }
-
-  const hashedPassword = await hashPlaintextPassword(plaintextPassword)
-  const user = new User(name, hashedPassword)
-  const result = await collections.users.insertOne(user)
-  if (result) {
-    user._id = result.insertedId
-    return user
-  } else {
-    throw `Could not create new user with name ${name}`
-  }
+export async function createNewDatabaseUser(context: RequestContext, machineID: number): Promise<User> {
+  const user = context.user
+  const databaseUser = new User(user.name, user.sub, machineID)
+  const rows = await asyncQuery('INSERT INTO development_users SET ?', databaseUser)
+  return rows[0] as User
 }
 
 export async function fetchExistingUser(name: string): Promise<User> {
-  return (await collections.users.findOne({ name: name })) as User
+  const rows = await asyncQuery(`SELECT * FROM development_users WHERE name = '${name}' LIMIT 1`)
+  console.log(rows)
+  return rows[0] as User
 }
 
 export async function fetchExistingUserByID(id: string): Promise<User> {
-  return (await collections.users.findOne({ _id: new ObjectId(id) })) as User
-}
-
-/**
- * @throws {Error}
- */
-export async function updatePasswordForUser(user: User, newPlaintextPassword: string): Promise<User> {
-  const newHashedPassword = await hashPlaintextPassword(newPlaintextPassword)
-  const updatedUser = user
-  updatedUser.passwordHash = newHashedPassword
-  const updateResult = await collections.users.findOneAndUpdate({ _id: new ObjectId(user._id) }, updatedUser)
-  if (updateResult.ok) {
-    return updatedUser
-  } else {
-    throw `Could not update password for user ${user._id}`
-  }
+  const rows = await asyncQuery(`SELECT * FROM development_users WHERE id = '${id}' LIMIT 1`)
+  console.log(rows)
+  return rows[0] as User
 }
