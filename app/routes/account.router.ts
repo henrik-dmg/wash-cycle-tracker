@@ -1,5 +1,6 @@
 import express, { response } from 'express'
 import { requiresAuth } from 'express-openid-connect'
+import { deleteAccountAndCascade } from '../services/account.service'
 import { asyncQuery, sqlConnection } from '../services/database.service'
 import { createNewDatabaseUser, fetchExistingUserByID } from '../services/user.service'
 
@@ -9,7 +10,7 @@ accountRouter.get('/account', requiresAuth(), async (request, response) => {
   await fetchAndDisplayCurrentUser(request, response)
 })
 
-accountRouter.get('/account/completeSetup', requiresAuth(), async (request, response, next) => {
+accountRouter.get('/account/completeSetup', requiresAuth(), async (request, response) => {
   const user = await fetchExistingUserByID(request.oidc.user.sub)
   console.log(user)
   if (user) {
@@ -28,7 +29,7 @@ accountRouter.get('/account/changePassword', requiresAuth(), async (request, res
 
 accountRouter.get('/account/deleteAccount', requiresAuth() ,async (request, response) => {
   try {
-      // await deleteUserAndCascade(request.oidc.user[])
+      await deleteAccountAndCascade(request.oidc.user.sub)
       response.redirect('/')
     } catch (error) {
       response.redirect('/account')

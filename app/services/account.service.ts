@@ -1,5 +1,6 @@
 import { ManagementClient } from 'auth0'
 import { promisify } from 'util'
+import { deleteUser } from './user.service'
 
 export const managementClient = new ManagementClient({
   domain: 'panhans.eu.auth0.com',
@@ -12,6 +13,7 @@ export async function deleteAccountAndCascade(userID: string) {
   const deleteUserPromise = promisify(managementClient.deleteUser)
   try {
     await deleteUserPromise({ id: userID})
+    await deleteUser(userID)
   } catch (error) {
     console.error(error)
   }

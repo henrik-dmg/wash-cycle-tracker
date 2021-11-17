@@ -9,6 +9,11 @@ export async function createNewDatabaseUser(context: RequestContext, machineID: 
   return rows[0] as User
 }
 
+export async function deleteUser(userID: string) {
+  const result = await asyncQuery(`DELETE FROM development_users WHERE id = '${userID}'`)
+  console.log(result)
+}
+
 export async function fetchExistingUser(name: string): Promise<User> {
   const rows = await asyncQuery(`SELECT * FROM development_users WHERE name = '${name}' LIMIT 1`)
   console.log(rows)
