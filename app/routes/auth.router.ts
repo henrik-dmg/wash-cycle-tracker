@@ -4,7 +4,7 @@ export const authRouter = express.Router()
 
 // - GET /
 
-authRouter.get('/login', (req, res) => res.oidc.login({ returnTo: '/account/completeSetup' }))
+authRouter.get('/login', (req, res) => res.oidc.login({ returnTo: '/account' }))
 
 // - GET /callback
 

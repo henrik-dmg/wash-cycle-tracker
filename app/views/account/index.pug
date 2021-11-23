@@ -11,5 +11,9 @@ html(lang="en")
       else
         h1 500
         p You should not be able to see this page if you're not signed in. Please send an email to henrik@panhans.dev
+
+      if showSetupCompletion
+        p Your account is not fully setup yet. Please finish the setup using the link below
+        a(href="/account/completeSetup") Complete setup
     script(src="scripts/account-delete-confirmation.js" defer)
     include ../common/bootstrap.pug

@@ -1,12 +1,14 @@
 import User from '../models/user'
 import { asyncQuery} from './database.service'
 import { RequestContext } from 'express-openid-connect'
+import { makeFindByNameQuery, makeFindByIDQuery } from '../helpers/query.helpers'
 
-export async function createNewDatabaseUser(context: RequestContext, machineID: number): Promise<User> {
+export async function createUser(context: RequestContext): Promise<User> {
   const user = context.user
-  const databaseUser = new User(user.name, user.sub, machineID)
+  const databaseUser = new User(user.name, user.sub)
   const rows = await asyncQuery('INSERT INTO development_users SET ?', databaseUser)
-  return rows[0] as User
+  console.log(rows)
+  return databaseUser
 }
 
 export async function deleteUser(userID: string) {
@@ -14,14 +16,14 @@ export async function deleteUser(userID: string) {
   console.log(result)
 }
 
-export async function fetchExistingUser(name: string): Promise<User> {
-  const rows = await asyncQuery(`SELECT * FROM development_users WHERE name = '${name}' LIMIT 1`)
+export async function fetchUserByName(name: string): Promise<User> {
+  const rows = await asyncQuery(makeFindByNameQuery(name))
   console.log(rows)
   return rows[0] as User
 }
 
-export async function fetchExistingUserByID(id: string): Promise<User> {
-  const rows = await asyncQuery(`SELECT * FROM development_users WHERE id = '${id}' LIMIT 1`)
+export async function fetchUserByID(id: string): Promise<User> {
+  const rows = await asyncQuery(makeFindByIDQuery(id))
   console.log(rows)
   return rows[0] as User
 }
