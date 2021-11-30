@@ -1,6 +1,7 @@
 import express from 'express'
 import { requiresAuth } from 'express-openid-connect'
 import { deleteAccountAndCascade } from '../services/account.service'
+import { createMachine } from '../services/machine.service'
 import { createUser, fetchUserByID } from '../services/user.service'
 
 export const accountRouter = express.Router()
@@ -18,15 +19,18 @@ accountRouter.get('/account/completeSetup', requiresAuth(), async (request, resp
   response.render('account/completeSetup')
 })
 
-accountRouter.post('/account/createMachine', requiresAuth(), async (request, response) => {
+accountRouter.post('/account/createMachine', requiresAuth(), async (request, response, next) => {
+  const machine = await createMachine(request.body['name'])
   const user = await fetchUserByID(request.oidc.user.sub)
-  if (user) {
-    response.redirect('/status')
-  } else {
+  if (user !== undefined) {
+    next(new Error('User already exists in database. Should not happen'))
+  } else if (machine !== undefined) {
     console.log('Creating new user')
-    const newUser = await createUser(request.oidc)
+    const newUser = await createUser(request.oidc, machine)
     console.log(newUser)
     response.redirect('/status')
+  } else {
+    next(new Error('Could not create new machine'))
   }
 })
 
