@@ -30,27 +30,4 @@ export async function numberOfWashCyclesSinceLastCleanCycle(request: Request): P
   const rows = await asyncQuery(query)
 
   return rows.length
-
-  // const username = request.session.userID
-  // if (!username) {
-  //   throw 'User is not signed in, should not get to this state'
-  // }
-
-  // const cleanCollection = helpers.database.collection(`${username}-clean-cycles`)
-  // const washCollection = helpers.database.collection(`${username}-wash-cycles`)
-  // const lastCleanCycle = await cleanCollection.find({}).sort({ date: -1 }).limit(1).toArray()
-
-  // if (lastCleanCycle[0] === null || lastCleanCycle.length == 0) {
-  //   console.log('Returning all wash cycles')
-  //   return await washCollection.count()
-  // } else {
-  //   console.log('Returning filtered cycles')
-  //   return await washCollection
-  //     .find({
-  //       date: {
-  //         $gte: lastCleanCycle[0].date,
-  //       },
-  //     })
-  //     .count()
-  // }
 }
