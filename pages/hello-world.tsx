@@ -1,6 +1,8 @@
 import { useState } from "react"
 import type { NextPage } from "next"
-import styles from '../styles/Home.module.css'
+import Image from "next/image"
+import Head from "next/head"
+import Layout from "../components/layout"
 
 const HelloWorld: NextPage = () => {
    const [likes, setLikes] = useState(0)
@@ -10,10 +12,19 @@ const HelloWorld: NextPage = () => {
   }
 
   return (
-    <div>
+    <Layout>
+      <Head>
+        <title>Hello World Dynamic</title>
+      </Head>
       <h1>Hello World, Next and React</h1>
       <button onClick={handleClick}>Likes ({likes})</button>
-    </div>
+      <Image
+        src="/images/space_cat.jpg"
+        alt="Space Cat"
+        width={100}
+        height={100}
+      />
+    </Layout>
   )
 }
 
