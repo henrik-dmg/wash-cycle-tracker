@@ -1,8 +1,9 @@
 import { useState } from "react"
+import type { NextPage } from "next"
+import styles from '../styles/Home.module.css'
 
-export default function HelloWorld() {
-
-  const [likes, setLikes] = useState(0)
+const HelloWorld: NextPage = () => {
+   const [likes, setLikes] = useState(0)
 
   function handleClick() {
     setLikes(likes + 1)
@@ -15,3 +16,5 @@ export default function HelloWorld() {
     </div>
   )
 }
+
+export default HelloWorld
