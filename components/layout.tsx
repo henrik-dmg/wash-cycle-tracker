@@ -4,11 +4,17 @@ import styles from './layout.module.css'
 import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
 import NavigationBar from './navigationbar'
+import { homedir } from 'os'
 
 const name = 'Henrik Panhans'
 export const siteTitle = 'Next.js Sample Website'
 
-export default function Layout({ children, home }) {
+export type Props = {
+  children: any
+  home: Boolean
+}
+
+export default function Layout(props: Props) {
   return (
     <div className={styles.container}>
       <Head>
@@ -23,9 +29,9 @@ export default function Layout({ children, home }) {
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <NavigationBar home={home} />
-      <main>{children}</main>
-      {!home && (
+      <NavigationBar home={props.home}/>
+      <main>{props.children}</main>
+      {!props.home && (
         <div className={styles.backToHome}>
           <Link href="/">
             <a>← Back to home</a>

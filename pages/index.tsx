@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   const selfIntroduction = "I'm a software engineer who likes to build things."
 
   return (
-    <Layout home>
+    <Layout home={true}>
       <Head>
         <title>{siteTitle}</title>
       </Head>

@@ -6,7 +6,7 @@ import utilStyles from '../styles/utils.module.css'
 const name = 'Henrik Panhans'
 export const siteTitle = 'Next.js Sample Website'
 
-export default function NavigationBar({ home }) {
+export default function NavigationBar(home: boolean) {
   return (
     <header className={styles.header}>
       {home ? (
