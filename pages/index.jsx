@@ -3,11 +3,11 @@ import Loader from '../components/Loader'
 
 export default function HomePage() {
   const selfIntroduction = "I'm a software engineer who likes to build things."
-
+  const pageName = 'Washing Machine Server'
   return (
     <>
       <Head>
-        <title>{'Henrik Panhans'}</title>
+        <title>{pageName}</title>
       </Head>
       <main>
         <section>
@@ -17,9 +17,6 @@ export default function HomePage() {
             <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
           </p>
         </section>
-        <Loader isShown />
-        <a href="/api/auth/login">Login</a>
-        <a href="/api/auth/logout">Logout</a>
       </main>
     </>
   )

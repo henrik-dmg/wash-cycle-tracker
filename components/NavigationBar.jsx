@@ -2,6 +2,7 @@ import { useUser } from '@auth0/nextjs-auth0'
 import Image from 'next/image'
 import Link from 'next/link'
 import Loader from './Loader'
+import styles from './navigationbar.module.css'
 
 export default function NavigationBar() {
   const { user, isLoading } = useUser()
@@ -10,7 +11,7 @@ export default function NavigationBar() {
     return user.sub.split('|')[1]
   }
   return (
-    <nav className="navbar">
+    <nav className={styles.navbar}>
       <ul>
         <li>
           <Link href="/">

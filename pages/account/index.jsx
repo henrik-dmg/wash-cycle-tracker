@@ -1,8 +1,7 @@
-import type { NextPage } from 'next'
 import { useUser } from '@auth0/nextjs-auth0'
 import Image from 'next/image'
 
-const AccountPage: NextPage = () => {
+export default function AccountPage() {
   const { user, error, isLoading } = useUser()
 
   if (isLoading) return <div>Loading...</div>
@@ -20,5 +19,3 @@ const AccountPage: NextPage = () => {
     )
   )
 }
-
-export default AccountPage
