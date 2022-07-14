@@ -1,12 +1,23 @@
 import type { NextPage } from 'next'
+import { useUser } from '@auth0/nextjs-auth0'
+import Image from 'next/image'
 
 const AccountPage: NextPage = () => {
+  const { user, error, isLoading } = useUser()
+
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>{error.message}</div>
+
   return (
-    <div>
-      <h1>Account</h1>
-      <p>This is the account page.</p>
-      <a href="/api/auth/login">Login</a>
-    </div>
+    user && (
+      <div>
+        <h1>Account</h1>
+        <p>This is the account page.</p>
+        <Image src={user.picture} alt={user.name} width={100} height={100} />
+        <h2>{user.name}</h2>
+        <p>{user.email}</p>
+      </div>
+    )
   )
 }
 

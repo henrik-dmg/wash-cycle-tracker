@@ -1,7 +1,7 @@
-import type { NextPage } from 'next'
 import Head from 'next/head'
+import Loader from '../components/Loader'
 
-const HomePage: NextPage = () => {
+export default function HomePage() {
   const selfIntroduction = "I'm a software engineer who likes to build things."
 
   return (
@@ -17,9 +17,10 @@ const HomePage: NextPage = () => {
             <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
           </p>
         </section>
+        <Loader isShown />
+        <a href="/api/auth/login">Login</a>
+        <a href="/api/auth/logout">Logout</a>
       </main>
     </>
   )
 }
-
-export default HomePage
