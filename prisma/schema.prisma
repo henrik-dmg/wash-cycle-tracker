@@ -1,0 +1,28 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Action {
+  id         Int      @id @default(autoincrement())
+  date       DateTime @default(now())
+  actionType String
+  machine    Machine? @relation(fields: [machine_id], references: [id])
+  machine_id Int
+
+  @@index([machine_id])
+}
+
+model Machine {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  Action      Action[]
+}
