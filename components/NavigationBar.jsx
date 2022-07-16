@@ -3,14 +3,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Loader from './Loader'
 import styles from './navigationbar.module.css'
-import { sanitiseUsername } from '../lib/usernameSanitisation'
 
 export default function NavigationBar() {
   const { user, isLoading } = useUser()
 
-  function getUserID() {
-    return sanitiseUsername(user?.sub)
-  }
   return (
     <nav className={styles.navbar}>
       <ul>
@@ -28,7 +24,7 @@ export default function NavigationBar() {
         {user && (
           <>
             <li className="push-left">
-              <Link href={`/${getUserID()}`}>
+              <Link href={`/account`}>
                 <Image src={user.picture} alt={user.name} width={100} height={100} />
               </Link>
             </li>
