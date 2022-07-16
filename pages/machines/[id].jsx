@@ -1,23 +1,20 @@
 import { useRouter } from 'next/router'
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
-import useSWR from 'swr'
-import ProtectedRoute from '../../components/ProtectedRoute'
+import prisma from '../../lib/prisma'
 
-const fetcher = async (uri) => {
-  const response = await fetch(uri)
-  console.log(response)
-  return response.json()
+export default function Machine({ user, machine }) {
+  return (
+    <div>
+      <p>Hello</p>
+    </div>
+  )
 }
 
-export default function Machine() {
-  const router = useRouter()
-  const { id } = router.query
-
-  const { data, error } = useSWR(`/api/machines/${id}`, fetcher)
-
-  if (error) return <ProtectedRoute error={`something went wrong`} />
-  if (data === undefined) return <div>Loading...</div>
-  return <div>{data.message}</div>
-}
-
-export const getServerSideProps = withPageAuthRequired()
+export const getServerSideProps = withPageAuthRequired({
+  async getServerSideProps(context) {
+    const { id } = context.params
+    const machine = await prisma.machine.findUnique({ where: { id: parseInt(id) } })
+    console.log('Fetched machine from DB')
+    return { props: { machine: machine } }
+  },
+})

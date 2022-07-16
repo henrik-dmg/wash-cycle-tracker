@@ -9,6 +9,14 @@ datasource db {
   referentialIntegrity = "prisma"
 }
 
+model Machine {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  Action      Action[]
+}
+
 model Action {
   id         Int      @id @default(autoincrement())
   date       DateTime @default(now())
@@ -17,12 +25,4 @@ model Action {
   machine_id Int
 
   @@index([machine_id])
-}
-
-model Machine {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String
-  createdAt   DateTime @default(now())
-  Action      Action[]
 }
