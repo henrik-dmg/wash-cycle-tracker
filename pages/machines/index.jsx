@@ -7,10 +7,12 @@ const fetcher = async (uri) => {
   return response.json()
 }
 
-export default withPageAuthRequired(function Machines() {
+export default function Machines() {
   const { data, error } = useSWR('/api/machines', fetcher)
 
-  if (error) return <ProtectedRoute error={error.message} />
+  if (error) return <ProtectedRoute error={`something went wrong`} />
   if (data === undefined) return <div>Loading...</div>
-  return <div>{data}</div>
-})
+  return <div>{data.message}</div>
+}
+
+export const getServerSideProps = withPageAuthRequired()

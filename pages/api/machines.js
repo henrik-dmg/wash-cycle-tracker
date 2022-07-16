@@ -1,4 +1,3 @@
-import prisma from '../../lib/prisma.js'
 import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { env } from 'process';
 

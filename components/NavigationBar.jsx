@@ -3,12 +3,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Loader from './Loader'
 import styles from './navigationbar.module.css'
+import { sanitiseUsername } from '../lib/usernameSanitisation'
 
 export default function NavigationBar() {
   const { user, isLoading } = useUser()
 
   function getUserID() {
-    return user.sub.split('|')[1]
+    return sanitiseUsername(user?.sub)
   }
   return (
     <nav className={styles.navbar}>
