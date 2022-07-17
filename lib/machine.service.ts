@@ -3,17 +3,24 @@ import prisma from './prisma'
 import safeJsonStringify from 'safe-json-stringify'
 
 export async function fetchMachine(id: number): Promise<Machine | null> {
-  const machine = await prisma.machine.findUnique({ where: { id: id } })
+  const machine = await prisma.machine.findUnique({
+    where: { id: id },
+  })
   if (machine) {
-    machine.createdAt = JSON.parse(safeJsonStringify(machine.createdAt))
+    safeEncodeMachine(machine)
   }
   return machine
 }
 
-export async function fetchMachines(): Promise<Array<Machine>> {
-  const machines = await prisma.machine.findMany()
-  machines.map((machine) => {
-    machine.createdAt = JSON.parse(safeJsonStringify(machine.createdAt))
+export async function fetchMachinesForUser(userId: string): Promise<Array<Machine>> {
+  const userMachineRelationships = await prisma.usersOnMachines.findMany({
+    where: { userId: userId },
+    include: { machine: true },
   })
-  return machines
+  return userMachineRelationships.map((relationship) => relationship.machine)
+}
+
+function safeEncodeMachine(machine: Machine): Machine {
+  machine.createdAt = JSON.parse(safeJsonStringify(machine.createdAt))
+  return machine
 }

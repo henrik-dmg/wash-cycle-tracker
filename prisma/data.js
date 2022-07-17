@@ -9,29 +9,61 @@ const machines = [
   },
 ]
 
-const actions = [
+const users = [
   {
-    actionType: "Wash",
-    machine_id: 1,
+    id: 'someUserID',
+    name: 'Henrik Panhans',
   },
   {
-    actionType: "Wash",
-    machine_id: 1,
-  },
-  {
-    actionType: "Wash",
-    machine_id: 1,
-  },
-  {
-    actionType: "Wash",
-    machine_id: 2,
-  },
-  {
-    actionType: "Clean",
-    machine_id: 1,
+    id: 'someOtherUserID',
+    name: 'Lisa-Marie Reinert',
   },
 ]
 
+const actions = [
+  {
+    actionType: 'Wash',
+    machineId: 1,
+  },
+  {
+    actionType: 'Wash',
+    machineId: 1,
+  },
+  {
+    actionType: 'Wash',
+    machineId: 1,
+  },
+  {
+    actionType: 'Wash',
+    machineId: 2,
+  },
+  {
+    actionType: 'Clean',
+    machineId: 1,
+  },
+]
+
+const userMachineRelationships = [
+  {
+    machineId: 1,
+    userId: "someUserID",
+    assignedBy: "admin"
+ },
+ {
+    machineId: 2,
+    userId: "someUserID",
+    assignedBy: "admin"
+ },
+ {
+    machineId: 1,
+    userId: "someOtherUserID",
+    assignedBy: "admin"
+ }
+]
+
 module.exports = {
-  machines, actions
+  machines,
+  actions,
+  users,
+  userMachineRelationships
 }
