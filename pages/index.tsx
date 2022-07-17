@@ -1,7 +1,7 @@
 import Head from 'next/head'
-import Loader from '../components/Loader'
+import type { NextPage } from 'next'
 
-export default function HomePage() {
+const HomePage: NextPage = () => {
   const selfIntroduction = "I'm a software engineer who likes to build things."
   const pageName = 'Washing Machine Server'
   return (
@@ -21,3 +21,5 @@ export default function HomePage() {
     </>
   )
 }
+
+export default HomePage

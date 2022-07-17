@@ -1,11 +1,11 @@
 import { withApiAuthRequired } from '@auth0/nextjs-auth0';
-import prisma from "../../../lib/prisma"
+import { findMachine } from "../../../lib/machine.service"
 
 async function handler(req, res) {
   const { id }  = req.query
 
   try {
-    const machine = await prisma.machine.findUnique({ where: { id: parseInt(id) }})
+    const machine = await findMachine(parseInt(id))
     return res.status(200).json({ machine })
   } catch (error) {
     console.error(error)
