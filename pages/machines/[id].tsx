@@ -1,9 +1,8 @@
 import { getSession, withPageAuthRequired } from '@auth0/nextjs-auth0'
-import MachineComponent from '../../components/Machine'
+import MachineComponent from '../../components/MachineComponent'
 import { fetchMachine } from '../../lib/machine.service'
 import type { NextPage } from 'next'
 import { Machine } from '@prisma/client'
-import toast from 'react-hot-toast'
 
 interface Props {
   user: any
@@ -26,8 +25,13 @@ export const getServerSideProps = withPageAuthRequired({
     try {
       const session = getSession(context.req, context.res)
       const { user } = session!
-      const id = context.params!['id'] as string
-      const machine = await fetchMachine(user.sub, parseInt(id))
+      const id = parseInt(context.params!['id'] as string)
+      if (!id) {
+        console.warn(`Id was ${id} on dynamic route`)
+        return { props: { machine: null } }
+      }
+      console.log(`Fetching machine for id ${id}`)
+      const machine = await fetchMachine(user.sub, id)
       if (!machine) {
         return {
           redirect: {

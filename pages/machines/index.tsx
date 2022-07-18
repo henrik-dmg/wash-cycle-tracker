@@ -1,5 +1,5 @@
 import { getSession, withPageAuthRequired } from '@auth0/nextjs-auth0'
-import MachineComponent from '../../components/Machine'
+import MachineComponent from '../../components/MachineComponent'
 import { fetchMachinesForUser } from '../../lib/machine.service'
 import { Machine } from '@prisma/client'
 import type { NextPage } from 'next'
