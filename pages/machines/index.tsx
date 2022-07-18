@@ -4,6 +4,7 @@ import { fetchMachinesForUser } from '../../lib/machine.service'
 import { Machine } from '@prisma/client'
 import type { NextPage } from 'next'
 import Link from 'next/link'
+import styles from '../../styles/Default.module.css'
 
 interface Props {
   user: any
@@ -12,14 +13,14 @@ interface Props {
 
 const MachinesPage: NextPage<Props> = (props) => {
   return (
-    <>
+    <main className={styles.defaultContainer}>
       {props.machines.map((machine) => (
         <MachineComponent key={machine.id} machine={machine} />
       ))}
       <Link href="/machines/create">
         <a>Create a new machine</a>
       </Link>
-    </>
+    </main>
   )
 }
 

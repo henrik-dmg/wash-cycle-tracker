@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import type { NextPage } from 'next'
+import styles from '../styles/Default.module.css'
 
 const HomePage: NextPage = () => {
   const selfIntroduction = "I'm a software engineer who likes to build things."
@@ -9,7 +10,7 @@ const HomePage: NextPage = () => {
       <Head>
         <title>{pageName}</title>
       </Head>
-      <main>
+      <main className={styles.defaultContainer}>
         <section>
           <p>{selfIntroduction}</p>
           <p>

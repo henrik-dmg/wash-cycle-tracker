@@ -3,6 +3,7 @@ import MachineComponent from '../../components/machine/MachineComponent'
 import { fetchMachine } from '../../lib/machine.service'
 import type { NextPage } from 'next'
 import { Machine } from '@prisma/client'
+import styles from "../../styles/Default.module.css"
 
 interface Props {
   user: any
@@ -11,10 +12,10 @@ interface Props {
 
 const MachinePage: NextPage<Props> = (props) => {
   return (
-    <>
+    <main className={styles.defaultContainer}>
       {!props.machine && <p>Machine not found</p>}
       {props.machine && <MachineComponent machine={props.machine} />}
-    </>
+    </main>
   )
 }
 

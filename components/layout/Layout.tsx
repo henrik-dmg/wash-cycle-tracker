@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import type { NextPage } from 'next'
 import NavigationBar from '../navigationbar/NavigationBar'
-import { lightModeClasses, darkModeClasses } from './layout.styles'
+import { defaultBodyClasses } from '../../lib/style.utilities'
 
 interface Props {
   children: any
@@ -10,10 +10,7 @@ interface Props {
 
 const Layout: NextPage<Props> = ({ children, path }) => {
   useEffect(() => {
-    lightModeClasses.forEach((className) => {
-      document.body.classList.add(className)
-    })
-    darkModeClasses.forEach((className) => {
+    defaultBodyClasses().forEach((className) => {
       document.body.classList.add(className)
     })
   })

@@ -2,6 +2,7 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
+import styles from '../../styles/Default.module.css'
 
 const CreateMachine: NextPage = () => {
   const router = useRouter()
@@ -50,7 +51,7 @@ const CreateMachine: NextPage = () => {
   }
 
   return (
-    <main>
+    <main className={styles.defaultContainer}>
       <h1 className="title">Create Machine</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="name">Machine Name</label>
