@@ -12,7 +12,7 @@ export default function NavigationBar() {
       <ul>
         <li>
           <Link href="/">
-            <a className="btn-logo">FEED</a>
+            <a className="btn-logo">WMS</a>
           </Link>
         </li>
 
@@ -24,8 +24,10 @@ export default function NavigationBar() {
         {user && (
           <>
             <li className="push-left">
-              <Link href={`/account`}>
-                <Image src={user.picture} alt={user.name} width={100} height={100} />
+              <Link href={`/account`} passHref>
+                <a>
+                  <Image src={user.picture} alt={user.name} width={100} height={100} layout="intrinsic" />
+                </a>
               </Link>
             </li>
             <li>
