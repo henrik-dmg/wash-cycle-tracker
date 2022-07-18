@@ -3,12 +3,12 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
 import styles from '../../styles/Default.module.css'
-
+import { FormEvent } from 'react'
 const CreateMachine: NextPage = () => {
   const router = useRouter()
 
   // Handles the submit event on form submit.
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault()
 

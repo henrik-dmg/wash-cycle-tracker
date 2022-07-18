@@ -5,7 +5,7 @@ export function highlightableItem(...otherClassnames: string[]): string {
 }
 
 export function defaultBodyClasses(): string[] {
-  const lightModeClasses = ['bg-white', 'text-zinc-900']
-  const darkModeClasses = ['dark:bg-zinc-800', 'dark:text-white']
-  return lightModeClasses.concat(darkModeClasses)
+  // const lightModeClasses =
+  // const darkModeClasses = ['dark:bg-zinc-800', 'dark:text-white', 'bg-white', 'text-zinc-900']
+  return ['bg-white', 'text-zinc-900', 'dark:bg-zinc-800', 'dark:text-white']
 }
