@@ -1,0 +1,47 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Machine {
+  id              Int               @id @default(autoincrement())
+  name            String
+  description     String
+  createdAt       DateTime          @default(now())
+  UsersOnMachines UsersOnMachines[]
+  Action          Action[]
+}
+
+model User {
+  id              String            @id
+  name            String
+  UsersOnMachines UsersOnMachines[]
+}
+
+model Action {
+  id         Int      @id @default(autoincrement())
+  date       DateTime @default(now())
+  actionType String
+  machine    Machine? @relation(fields: [machineId], references: [id])
+  machineId  Int
+
+  @@index([machineId])
+}
+
+model UsersOnMachines {
+  machine   Machine @relation(fields: [machineId], references: [id])
+  machineId Int
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@id([machineId, userId])
+}
