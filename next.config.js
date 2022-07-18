@@ -5,7 +5,9 @@ const nextConfig = {
   images: {
     domains: [
       'gravatar.com',
-      "s.gravatar.com"
+      "s.gravatar.com",
+      "tailwindui.com",
+      "images.unsplash.com"
     ]
   }
 }

@@ -5,10 +5,10 @@ import { UserProvider } from '@auth0/nextjs-auth0'
 import NavigationBar from '../components/NavigationBar'
 import { Toaster } from 'react-hot-toast'
 
-function WashingMachineApp({ Component, pageProps }: AppProps) {
+function WashingMachineApp({ Component, pageProps, router }: AppProps) {
   return (
     <UserProvider>
-      <NavigationBar />
+      <NavigationBar path={router.asPath} />
       <Component {...pageProps} />
       <Toaster />
     </UserProvider>
