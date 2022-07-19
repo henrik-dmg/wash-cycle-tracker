@@ -1,7 +1,8 @@
 /* Navbar */
+@import '../../styles/Default.module.css';
 
 .navbar {
-  @apply bg-zinc-300;
+  @apply bg-zinc-100;
   @apply dark:bg-zinc-900;
 }
 

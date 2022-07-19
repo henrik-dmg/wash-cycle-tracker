@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useState } from 'react'
-import { getSession, useUser } from '@auth0/nextjs-auth0'
+import { useUser } from '@auth0/nextjs-auth0'
 import styles from './navigationbar.module.css'
 import { highlightableItem } from '../../lib/style.utilities'
 

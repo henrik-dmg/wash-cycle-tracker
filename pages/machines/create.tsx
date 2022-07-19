@@ -46,7 +46,7 @@ const CreateMachine: NextPage = () => {
     toast.success('Machine was successfully created')
 
     if (result) {
-      router.push(`/machines/${result.id}`)
+      await router.push(`/machines/${result.id}`)
     } else {
       toast.error('Something went wrong')
     }

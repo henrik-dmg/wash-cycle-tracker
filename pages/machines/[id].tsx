@@ -30,7 +30,7 @@ export const getServerSideProps = withPageAuthRequired({
       const id = parseInt(context.params!['id'] as string)
       if (!id) {
         console.warn(`Id was ${id} on dynamic route`)
-        return { props: { machine: undefined } }
+        throw `Id was ${id} on dynamic route`
       }
       console.log(`Fetching machine for id ${id}`)
       const machine = await fetchMachine(user.sub, id)

@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import '../styles/Default.module.css'
 import type { AppProps } from 'next/app'
 import React from 'react'
 import { UserProvider } from '@auth0/nextjs-auth0'
