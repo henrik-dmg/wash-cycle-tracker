@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import type { NextPage } from 'next'
 import NavigationBar from '../navigationbar/NavigationBar'
 import { lightModeClasses, darkModeClasses } from './layout.utilities'
+import toast from 'react-hot-toast'
 
 interface Props {
   children: any
