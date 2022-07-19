@@ -4,14 +4,12 @@ import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
 import styles from '../../styles/Default.module.css'
 import { FormEvent } from 'react'
+import { Machine } from '@prisma/client'
+
 const CreateMachine: NextPage = () => {
   const router = useRouter()
 
-  // Handles the submit event on form submit.
-  const handleSubmit = async (event: FormEvent) => {
-    // Stop the form from submitting and refreshing the page.
-    event.preventDefault()
-
+  const createNewMachineAndNavigate = async (event: FormEvent) => {
     // Get data from the form.
     const data = {
       name: event.target.name.value,
@@ -39,17 +37,39 @@ const CreateMachine: NextPage = () => {
     // Send the form data to our forms API on Vercel and get a response.
     const response = await fetch(endpoint, options)
 
+    if (!response.ok) {
+      throw 'Could not create machine'
+    }
+
     // Get the response data from server as JSON.
     // If server returns the name submitted, that means the form works.
-    const result = await response.json()
-
-    toast.success('Machine was successfully created')
+    const result: Machine = await response.json()
 
     if (result) {
       await router.push(`/machines/${result.id}`)
     } else {
-      toast.error('Something went wrong')
+      throw 'Could not create machine'
     }
+  }
+
+  // Handles the submit event on form submit.
+  const handleSubmit = async (event: FormEvent) => {
+    // Stop the form from submitting and refreshing the page.
+    event.preventDefault()
+
+    toast.promise(
+      createNewMachineAndNavigate(event),
+      {
+        loading: 'Saving...',
+        success: <b>New machine created</b>,
+        error: <b>Could not save. Please try again</b>,
+      },
+      {
+        style: {
+          minWidth: '250px',
+        },
+      }
+    )
   }
 
   return (

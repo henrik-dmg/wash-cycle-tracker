@@ -22,24 +22,29 @@ const users = [
 
 const actions = [
   {
-    actionType: 'Wash',
+    actionType: 'wash',
     machineId: 1,
+    userId: "someUserID"
   },
   {
-    actionType: 'Wash',
+    actionType: 'wash',
     machineId: 1,
+    userId: "someUserID"
   },
   {
-    actionType: 'Wash',
+    actionType: 'wash',
     machineId: 1,
+    userId: "someUserID"
   },
   {
-    actionType: 'Wash',
+    actionType: 'wash',
     machineId: 2,
+    userId: "someUserID"
   },
   {
-    actionType: 'Clean',
+    actionType: 'clean',
     machineId: 1,
+    userId: "someUserID"
   },
 ]
 

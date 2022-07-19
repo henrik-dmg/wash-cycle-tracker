@@ -34,15 +34,19 @@ const NavigationBar = (props: Props) => {
           <div className={`${active ? '' : 'hidden'}   w-full lg:inline-flex lg:flex-grow lg:w-auto`}>
             <div className="lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start  flex flex-col lg:h-auto">
               <Link href="/machines">
-                <a className={highlightableItem(styles.navbarItem)}>Machines</a>
+                <a className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
+                  Machines
+                </a>
               </Link>
               <Link href="/">
-                <a className={highlightableItem(styles.navbarItem)}>Contact us</a>
+                <a className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
+                  Contact us
+                </a>
               </Link>
               {!user && (
                 <>
                   {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-                  <a href="/api/auth/login" className={highlightableItem(styles.navbarItem)}>
+                  <a href="/api/auth/login" className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
                     Log in
                   </a>
                 </>
@@ -50,10 +54,12 @@ const NavigationBar = (props: Props) => {
               {user && (
                 <>
                   <Link href="/account">
-                    <a className={highlightableItem(styles.navbarItem)}>Account</a>
+                    <a className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
+                      Account
+                    </a>
                   </Link>
                   {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-                  <a href="/api/auth/logout" className={highlightableItem(styles.navbarItem)}>
+                  <a href="/api/auth/logout" className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
                     Log out
                   </a>
                 </>
