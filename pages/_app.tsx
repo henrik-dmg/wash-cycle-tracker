@@ -12,7 +12,7 @@ function WashingMachineApp({ Component, pageProps, router }: AppProps) {
       <Layout path={router.asPath}>
         <Component {...pageProps} />
       </Layout>
-      <Toaster position="bottom-center" reverseOrder={true} />
+      <Toaster position="bottom-center" />
     </UserProvider>
   )
 }

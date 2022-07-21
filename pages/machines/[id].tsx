@@ -7,7 +7,6 @@ import React from 'react'
 import MachineComponent from '../../components/machine/MachineComponent'
 
 interface Props {
-  user: any
   machine?: MachineWithActions
 }
 
@@ -30,7 +29,7 @@ export const getServerSideProps = withPageAuthRequired({
       const id = parseInt(context.params!['id'] as string)
       if (!id) {
         console.warn(`Id was ${id} on dynamic route`)
-        return {}
+        return { props: { machine: null } }
       }
       console.log(`Fetching machine for id ${id}`)
       const machine = await fetchMachine(user.sub, id)

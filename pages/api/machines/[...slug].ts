@@ -1,12 +1,13 @@
-import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0'
+import { withSessionEnsured } from '../../../lib/session.utilities'
+import { Session } from '@auth0/nextjs-auth0'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { logAction } from '../../../lib/machine.service'
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = getSession(req, res)
-  if (!session) {
-    return res.status(500).json({ message: 'Session was not ensured by the server' })
+async function handler(req: NextApiRequest, res: NextApiResponse, session: Session) {
+  if (req.method !== 'POST') {
+    return res.status(400).json({ message: `${req.method} is not allowed` })
   }
+
   const { user } = session
   const slug = req.query['slug'] as string[]
 
@@ -21,7 +22,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       const washAction = await logAction(action, machineId, user.sub)
       return res.status(200).json(washAction)
     } else {
-      throw `Invalid actio ${action} was passed`
+      throw `Invalid action ${action} was passed`
     }
   } catch (error) {
     console.error(error)
@@ -29,4 +30,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withApiAuthRequired(handler)
+export default withSessionEnsured(handler)
