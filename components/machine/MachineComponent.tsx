@@ -64,24 +64,40 @@ const MachineComponent: FunctionComponent<Props> = (props) => {
       </div>
 
       {actions && (
-        <table className="container table-auto">
-          <thead>
-            <tr>
-              <th>Action</th>
-              <th>Logged by</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {actions.map((action) => (
-              <tr key={action.id}>
-                <td>{action.actionType}</td>
-                <td>{action.userId}</td>
-                <td>{action.date.toString()}</td>
+        <div className="overflow-x-auto shadow-md sm:rounded-lg">
+          <table className="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="py-3 px-6">
+                  Action
+                </th>
+                <th scope="col" className="py-3 px-6">
+                  Logged by
+                </th>
+                <th scope="col" className="py-3 px-6">
+                  Date
+                </th>
+                <th scope="col" className="py-3 px-6">
+                  Action
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="w-full">
+              {actions.map((action, index) => (
+                <tr className="bg-white dark:bg-gray-900 border-b dark:border-gray-700" key={action.id}>
+                  <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {action.actionType}
+                  </th>
+                  <td className="py-4 px-6">{action.userId}</td>
+                  <td className="py-4 px-6">{action.date.toString()}</td>
+                  <td className="py-4 px-6">
+                    <button className="font-medium text-red-600 dark:text-red-700 hover:underline">Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   )
