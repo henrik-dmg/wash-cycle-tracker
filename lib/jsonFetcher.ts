@@ -1,5 +1,4 @@
 export default async function jsonFetcher<T>(uri: string, method: string) {
-
   // Form the request for sending data to the server.
   const options = {
     // The method is POST because we are sending data.
@@ -11,7 +10,7 @@ export default async function jsonFetcher<T>(uri: string, method: string) {
   }
 
   // Send the form data to our forms API on Vercel and get a response.
-  const response = await fetch(uri, options)
+  const response = await fetch(options, uri)
 
   // Get the response data from server as JSON.
   // If server returns the name submitted, that means the form works.
