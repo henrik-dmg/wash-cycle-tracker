@@ -5,19 +5,22 @@ import toast from 'react-hot-toast'
 import styles from '../../styles/Default.module.css'
 import { FormEvent } from 'react'
 import { Machine } from '@prisma/client'
+import { SyntheticEvent } from 'react'
 
 const CreateMachine: NextPage = () => {
   const router = useRouter()
 
-  const createNewMachineAndNavigate = async (event: FormEvent<HTMLFormElement>) => {
+  const createNewMachineAndNavigate = async (event: SyntheticEvent) => {
     // Get data from the form.
-    const data = {
-      name: (event.currentTarget.element.namedItem('name') as HTMLInputElement).value,
-      description: (event.currentTarget.element.namedItem('description') as HTMLInputElement).value,
+    const target = event.target as typeof event.target & {
+      name: { value: string }
+      description: { value: string }
     }
+    const name = target.name.value // typechecks!
+    const description = target.description.value // typechecks!
 
     // Send the data to the server in JSON format.
-    const JSONdata = JSON.stringify(data)
+    const JSONdata = JSON.stringify({ name: name, description: description })
 
     // API endpoint where we send form data.
     const endpoint = '/api/machines/create'
@@ -53,7 +56,7 @@ const CreateMachine: NextPage = () => {
   }
 
   // Handles the submit event on form submit.
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: SyntheticEvent) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault()
 
