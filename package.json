@@ -10,7 +10,7 @@
     "seed": "node prisma/seed.js"
   },
   "engines": {
-    "node": "18.x"
+    "node": "16.x"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.9.1",
