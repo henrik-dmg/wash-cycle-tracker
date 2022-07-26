@@ -1,0 +1,33 @@
+/* Navbar */
+@import '../../styles/Default.module.css';
+
+.navbar {
+  @apply bg-zinc-100;
+  @apply dark:bg-zinc-900;
+}
+
+.navbarContent {
+  @apply flex items-center flex-wrap p-1 sm:container px-4;
+}
+
+.navbarItem {
+  @apply lg:inline-flex;
+  @apply lg:w-auto w-full;
+  @apply px-3 py-2;
+  @apply rounded;
+
+  @apply font-bold;
+  @apply items-center;
+  @apply justify-center;
+}
+
+.navbarHamburgerButton {
+  @apply inline-flex;
+  @apply p-2;
+
+  @apply rounded;
+  @apply lg:hidden;
+
+  @apply ml-auto;
+  @apply outline-none;
+}

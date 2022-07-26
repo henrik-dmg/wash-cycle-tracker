@@ -1,0 +1,7 @@
+.washcycleButton {
+    @apply bg-blue-500 px-2 py-1 rounded text-white hover:bg-blue-700 transition-colors break-after-auto
+}
+
+.cleancycleButton {
+    @apply bg-green-500 px-2 py-1 rounded text-white hover:bg-green-700 transition-colors break-after-auto
+}
