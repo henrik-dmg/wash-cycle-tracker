@@ -9,11 +9,11 @@ import { Machine } from '@prisma/client'
 const CreateMachine: NextPage = () => {
   const router = useRouter()
 
-  const createNewMachineAndNavigate = async (event: FormEvent) => {
+  const createNewMachineAndNavigate = async (event: FormEvent<HTMLFormElement>) => {
     // Get data from the form.
     const data = {
-      name: event.target.name.value,
-      description: event.target.description.value,
+      name: (event.currentTarget.element.namedItem('name') as HTMLInputElement).value,
+      description: (event.currentTarget.element.namedItem('description') as HTMLInputElement).value,
     }
 
     // Send the data to the server in JSON format.
@@ -53,7 +53,7 @@ const CreateMachine: NextPage = () => {
   }
 
   // Handles the submit event on form submit.
-  const handleSubmit = async (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault()
 

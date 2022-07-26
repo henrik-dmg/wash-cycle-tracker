@@ -20,7 +20,6 @@ const MachinesPage: NextPage<Props> = (props) => {
             <div key={machine.id} className={highlightableItem('p-2', 'rounded')}>
               <h2 className="text-3xl font-bold">{machine.name}</h2>
               <h4>{machine.id}</h4>
-              <p>{machine.createdAt}</p>
             </div>
           </a>
         </Link>
