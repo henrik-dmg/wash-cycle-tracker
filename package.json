@@ -1,6 +1,6 @@
 {
   "name": "washing-machine-server",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,7 +10,7 @@
     "seed": "node prisma/seed.js"
   },
   "engines": {
-    "node": "18.x"
+    "node": "16.x"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.9.1",
