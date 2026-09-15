@@ -1,9 +1,9 @@
 import { withSessionEnsured } from '../../../lib/session.utilities'
-import { Session } from '@auth0/nextjs-auth0'
+import type { SessionData } from '@auth0/nextjs-auth0/types'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { createMachine } from '../../../lib/machine.service'
 
-async function handler(req: NextApiRequest, res: NextApiResponse, session: Session) {
+async function handler(req: NextApiRequest, res: NextApiResponse, session: SessionData) {
   const body = req.body
 
   try {

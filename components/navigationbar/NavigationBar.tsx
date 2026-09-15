@@ -20,10 +20,8 @@ const NavigationBar = (props: Props) => {
     <>
       <nav className={styles.navbar}>
         <div className={styles.navbarContent}>
-          <Link href="/">
-            <a className="inline-flex items-center mr-4">
-              <span className="text-xl text-black dark:text-white font-bold uppercase tracking-wide">WMS</span>
-            </a>
+          <Link href="/" className="inline-flex items-center mr-4">
+            <span className="text-xl text-black dark:text-white font-bold uppercase tracking-wide">WMS</span>
           </Link>
           <button className={highlightableItem(styles.navbarHamburgerButton)} onClick={handleClick}>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -33,33 +31,25 @@ const NavigationBar = (props: Props) => {
           {/*Note that in this div we will use a ternary operator to decide whether or not to display the content of the div  */}
           <div className={`${active ? '' : 'hidden'}   w-full lg:inline-flex lg:flex-grow lg:w-auto`}>
             <div className="lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start  flex flex-col lg:h-auto">
-              <Link href="/machines">
-                <a className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
-                  Machines
-                </a>
+              <Link href="/machines" className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
+                Machines
               </Link>
-              <Link href="/">
-                <a className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
-                  Contact us
-                </a>
+              <Link href="/" className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
+                Contact us
               </Link>
               {!user && (
                 <>
-                  {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-                  <a href="/api/auth/login" className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
+                  <a href="/auth/login" className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
                     Log in
                   </a>
                 </>
               )}
               {user && (
                 <>
-                  <Link href="/account">
-                    <a className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
-                      Account
-                    </a>
+                  <Link href="/account" className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
+                    Account
                   </Link>
-                  {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-                  <a href="/api/auth/logout" className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
+                  <a href="/auth/logout" className={highlightableItem(styles.navbarItem)} onClick={handleClick}>
                     Log out
                   </a>
                 </>

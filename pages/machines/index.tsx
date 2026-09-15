@@ -1,6 +1,6 @@
-import { getSession, withPageAuthRequired } from '@auth0/nextjs-auth0'
+import { auth0 } from '../../lib/auth0'
 import { fetchMachinesForUser } from '../../lib/machine.service'
-import { Machine } from '@prisma/client'
+import { Machine } from '../../lib/generated/prisma/client'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import styles from '../../styles/Default.module.css'
@@ -15,19 +15,15 @@ const MachinesPage: NextPage<Props> = (props) => {
   return (
     <main className={styles.defaultContainer}>
       {props.machines.map((machine) => (
-        <Link key={machine.id} href={`/machines/${machine.id}`}>
-          <a>
-            <div key={machine.id} className={highlightableItem('p-2', 'rounded')}>
-              <h2 className="text-3xl font-bold">{machine.name}</h2>
-              <h4>{machine.id}</h4>
-            </div>
-          </a>
+        <Link key={machine.id} href={`/machines/${machine.id}`} className={highlightableItem('p-2', 'rounded')}>
+          <h2 className="text-3xl font-bold">{machine.name}</h2>
+          <h4>{machine.id}</h4>
         </Link>
       ))}
 
       <div className="pt-12">
-        <Link href="/machines/create">
-          <a className={highlightableItem('p-2', 'rounded')}>Create a new machine</a>
+        <Link href="/machines/create" className={highlightableItem('p-2', 'rounded')}>
+          Create a new machine
         </Link>
       </div>
     </main>
@@ -36,10 +32,10 @@ const MachinesPage: NextPage<Props> = (props) => {
 
 export default MachinesPage
 
-export const getServerSideProps = withPageAuthRequired({
+export const getServerSideProps = auth0.withPageAuthRequired({
   async getServerSideProps(context) {
     try {
-      const session = getSession(context.req, context.res)
+      const session = await auth0.getSession(context.req)
       if (!session) {
         throw "User session doesn't exist"
       }

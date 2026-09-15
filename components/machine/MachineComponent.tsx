@@ -1,6 +1,6 @@
 import styles from './machinecomponent.module.css'
 import { highlightableItem } from '../../lib/style.utilities'
-import { Action, Machine } from '@prisma/client'
+import { Action, Machine } from '../../lib/generated/prisma/client'
 import { FunctionComponent, useState } from 'react'
 import './machinecomponent.module.css'
 import toast from 'react-hot-toast'

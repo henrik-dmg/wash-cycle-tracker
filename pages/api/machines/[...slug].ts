@@ -1,9 +1,9 @@
 import { withSessionEnsured } from '../../../lib/session.utilities'
-import { Session } from '@auth0/nextjs-auth0'
+import type { SessionData } from '@auth0/nextjs-auth0/types'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { logAction } from '../../../lib/machine.service'
 
-async function handler(req: NextApiRequest, res: NextApiResponse, session: Session) {
+async function handler(req: NextApiRequest, res: NextApiResponse, session: SessionData) {
   if (req.method !== 'POST') {
     return res.status(400).json({ message: `${req.method} is not allowed` })
   }

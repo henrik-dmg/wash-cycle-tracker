@@ -1,4 +1,4 @@
-import { Action, Machine } from '@prisma/client'
+import { Action, Machine } from './generated/prisma/client'
 import prisma from './prisma'
 import safeJsonStringify from 'safe-json-stringify'
 

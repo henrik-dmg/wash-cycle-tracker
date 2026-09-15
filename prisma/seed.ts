@@ -1,6 +1,10 @@
-const { PrismaClient } = require('@prisma/client')
-const { machines, actions, users, userMachineRelationships } = require('./data.js')
-const prisma = new PrismaClient()
+import 'dotenv/config'
+import { PrismaMariaDb } from '@prisma/adapter-mariadb'
+import { PrismaClient } from '../lib/generated/prisma/client'
+import { machines, actions, users, userMachineRelationships } from './data.js'
+
+const adapter = new PrismaMariaDb(process.env.DATABASE_URL as string)
+const prisma = new PrismaClient({ adapter })
 
 const load = async () => {
   try {
@@ -34,7 +38,7 @@ const load = async () => {
     console.log('Added actions data')
 
     await prisma.usersOnMachines.createMany({
-      data: userMachineRelationships
+      data: userMachineRelationships,
     })
     console.log('Added machine-user-relationship data')
   } catch (e) {

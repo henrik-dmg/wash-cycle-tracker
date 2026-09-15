@@ -1,7 +1,7 @@
-import { getSession, withPageAuthRequired } from '@auth0/nextjs-auth0'
+import { auth0 } from '../../lib/auth0'
 import { fetchMachine, MachineWithActions } from '../../lib/machine.service'
 import type { NextPage } from 'next'
-import { Machine, Action } from '@prisma/client'
+import { Machine, Action } from '../../lib/generated/prisma/client'
 import styles from '../../styles/Default.module.css'
 import React from 'react'
 import MachineComponent from '../../components/machine/MachineComponent'
@@ -21,10 +21,10 @@ const MachinePage: NextPage<Props> = (props) => {
 
 export default MachinePage
 
-export const getServerSideProps = withPageAuthRequired({
+export const getServerSideProps = auth0.withPageAuthRequired({
   async getServerSideProps(context) {
     try {
-      const session = getSession(context.req, context.res)
+      const session = await auth0.getSession(context.req)
       const { user } = session!
       const id = parseInt(context.params!['id'] as string)
       if (!id) {

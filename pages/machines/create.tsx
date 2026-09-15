@@ -1,10 +1,10 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0'
+import { auth0 } from '../../lib/auth0'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
 import styles from '../../styles/Default.module.css'
 import { FormEvent } from 'react'
-import { Machine } from '@prisma/client'
+import { Machine } from '../../lib/generated/prisma/client'
 import { SyntheticEvent } from 'react'
 
 const CreateMachine: NextPage = () => {
@@ -91,4 +91,4 @@ const CreateMachine: NextPage = () => {
 
 export default CreateMachine
 
-export const getServerSideProps = withPageAuthRequired()
+export const getServerSideProps = auth0.withPageAuthRequired()

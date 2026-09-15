@@ -1,4 +1,5 @@
-import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
+import { useUser } from '@auth0/nextjs-auth0'
+import { auth0 } from '../../lib/auth0'
 import Image from 'next/image'
 import styles from '../../styles/Default.module.css'
 
@@ -23,4 +24,4 @@ export default function AccountPage() {
   )
 }
 
-export const getServerSideProps = withPageAuthRequired()
+export const getServerSideProps = auth0.withPageAuthRequired()
