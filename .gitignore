@@ -37,6 +37,12 @@ next-env.d.ts
 # prisma
 /lib/generated/prisma
 
+# sqlite database
+/data/*.db
+/data/*.db-journal
+/data/*.db-wal
+/data/*.db-shm
+
 # typescript
 tsconfig.tsbuildinfo
 

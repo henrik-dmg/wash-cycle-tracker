@@ -2,6 +2,7 @@
   "name": "washing-machine-server",
   "version": "1.0.5",
   "private": true,
+  "packageManager": "pnpm@10.32.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -16,7 +17,7 @@
     "@auth0/nextjs-auth0": "^4.29.0",
     "@headlessui/react": "^2.2.10",
     "@heroicons/react": "^2.2.0",
-    "@prisma/adapter-mariadb": "^7.10.0",
+    "@prisma/adapter-better-sqlite3": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "csstype": "^3.2.3",
     "dotenv": "^17.4.2",
@@ -45,6 +46,7 @@
     "onlyBuiltDependencies": [
       "@parcel/watcher",
       "@prisma/engines",
+      "better-sqlite3",
       "esbuild",
       "prisma",
       "unrs-resolver"
