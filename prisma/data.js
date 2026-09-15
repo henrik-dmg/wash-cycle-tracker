@@ -16,7 +16,7 @@ const users = [
   },
   {
     id: 'someOtherUserID',
-    name: 'Lisa-Marie Reinert',
+    name: 'Leona Schulz-Schaeffer',
   },
 ]
 
@@ -24,51 +24,51 @@ const actions = [
   {
     actionType: 'wash',
     machineId: 1,
-    userId: "someUserID"
+    userId: 'someUserID',
   },
   {
     actionType: 'wash',
     machineId: 1,
-    userId: "someUserID"
+    userId: 'someUserID',
   },
   {
     actionType: 'wash',
     machineId: 1,
-    userId: "someUserID"
+    userId: 'someUserID',
   },
   {
     actionType: 'wash',
     machineId: 2,
-    userId: "someUserID"
+    userId: 'someUserID',
   },
   {
     actionType: 'clean',
     machineId: 1,
-    userId: "someUserID"
+    userId: 'someUserID',
   },
 ]
 
 const userMachineRelationships = [
   {
     machineId: 1,
-    userId: "someUserID",
-    assignedBy: "admin"
- },
- {
+    userId: 'someUserID',
+    assignedBy: 'admin',
+  },
+  {
     machineId: 2,
-    userId: "someUserID",
-    assignedBy: "admin"
- },
- {
+    userId: 'someUserID',
+    assignedBy: 'admin',
+  },
+  {
     machineId: 1,
-    userId: "someOtherUserID",
-    assignedBy: "admin"
- }
+    userId: 'someOtherUserID',
+    assignedBy: 'admin',
+  },
 ]
 
 module.exports = {
   machines,
   actions,
   users,
-  userMachineRelationships
+  userMachineRelationships,
 }
