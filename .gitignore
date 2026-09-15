@@ -39,3 +39,10 @@ next-env.d.ts
 
 # typescript
 tsconfig.tsbuildinfo
+
+# Auth0 credentials
+.env
+
+.auth0-mcp-state.json
+
+.auth0-mcp-writes.log
