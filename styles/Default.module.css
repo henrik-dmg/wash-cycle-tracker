@@ -1,5 +1,7 @@
+@reference "./globals.css";
+
 .defaultContainer {
-  @apply sm:container p-4;
+  @apply container p-4;
 }
 
 .highlightableItem {
