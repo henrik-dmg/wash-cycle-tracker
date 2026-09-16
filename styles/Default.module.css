@@ -1,0 +1,16 @@
+@reference "./globals.css";
+
+.defaultContainer {
+  @apply container p-4;
+}
+
+.highlightableItem {
+  @apply text-zinc-700;
+  @apply dark:text-zinc-300;
+
+  @apply hover:bg-zinc-200;
+  @apply dark:hover:bg-zinc-700;
+
+  @apply transition-colors;
+  @apply motion-reduce:transition-none;
+}

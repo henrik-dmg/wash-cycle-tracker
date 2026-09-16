@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Machine {
+  id               Int      @id @default(autoincrement())
+  // 1 to 100 characters. The app checks the length, because SQLite does not.
+  name             String
+  // Number of washes before the machine needs a cleaning. Null if the machine has no cleaning interval.
+  cleaningInterval Int?
+  createdAt        DateTime @default(now())
+  entries          Entry[]
+}
+
+enum EntryKind {
+  wash
+  cleaning
+}
+
+model Entry {
+  id         Int       @id @default(autoincrement())
+  kind       EntryKind
+  // Stored as UTC.
+  occurredAt DateTime  @default(now())
+  machine    Machine   @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  machineId  Int
+
+  @@index([machineId, occurredAt])
+}

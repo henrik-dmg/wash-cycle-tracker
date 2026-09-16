@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+.idea
+.vscode
+.claude
+.github
+CLAUDE.md
+AGENTS.md
+CONTEXT.md
+docs
+skills-lock.json
+*.log
+.env*
+!.env.example

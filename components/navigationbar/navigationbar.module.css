@@ -1,0 +1,46 @@
+/* Navbar */
+@reference "../../styles/globals.css";
+@import '../../styles/Default.module.css';
+
+.navbar {
+  @apply glass-nav;
+  @apply sticky top-0 z-50;
+}
+
+.navbarContent {
+  @apply flex items-center flex-wrap p-1 container px-4;
+}
+
+.navbarItem {
+  @apply lg:inline-flex;
+  @apply lg:w-auto w-full;
+  @apply px-3 py-2;
+  @apply rounded-lg;
+
+  @apply font-semibold text-sm;
+  @apply items-center;
+  @apply justify-center;
+}
+
+.navbarItemActive {
+  @apply text-indigo-600;
+  @apply dark:text-indigo-400;
+}
+
+.navbarItemCta {
+  @apply bg-gradient-to-r from-indigo-500 to-purple-600;
+  @apply text-white;
+  @apply shadow-sm;
+  @apply hover:from-indigo-600 hover:to-purple-700;
+}
+
+.navbarHamburgerButton {
+  @apply inline-flex;
+  @apply p-2;
+
+  @apply rounded-lg;
+  @apply lg:hidden;
+
+  @apply ml-auto;
+  @apply outline-none;
+}
