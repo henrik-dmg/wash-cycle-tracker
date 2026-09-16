@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { apiNotFoundOutsideDeploymentMode } from '../../../../../../lib/api-guard'
+import { guardApiRequest } from '../../../../../../lib/api-guard'
 
-export async function DELETE(_request: NextRequest, context: RouteContext<'/api/machines/[id]/entries/[entryId]'>) {
-  const guard = apiNotFoundOutsideDeploymentMode()
+export async function DELETE(request: NextRequest, context: RouteContext<'/api/machines/[id]/entries/[entryId]'>) {
+  const guard = guardApiRequest(request)
   if (guard) {
     return guard
   }

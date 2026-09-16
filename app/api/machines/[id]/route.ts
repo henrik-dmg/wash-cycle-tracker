@@ -1,9 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { apiNotFoundOutsideDeploymentMode } from '../../../../lib/api-guard'
+import { guardApiRequest } from '../../../../lib/api-guard'
 
 // Gets one machine with its entries.
-export async function GET(_request: NextRequest, context: RouteContext<'/api/machines/[id]'>) {
-  const guard = apiNotFoundOutsideDeploymentMode()
+export async function GET(request: NextRequest, context: RouteContext<'/api/machines/[id]'>) {
+  const guard = guardApiRequest(request)
   if (guard) {
     return guard
   }
@@ -29,7 +29,7 @@ export async function GET(_request: NextRequest, context: RouteContext<'/api/mac
 
 // Renames a machine. The body is `{ "name": string }`.
 export async function PATCH(request: NextRequest, context: RouteContext<'/api/machines/[id]'>) {
-  const guard = apiNotFoundOutsideDeploymentMode()
+  const guard = guardApiRequest(request)
   if (guard) {
     return guard
   }
@@ -58,8 +58,8 @@ export async function PATCH(request: NextRequest, context: RouteContext<'/api/ma
 }
 
 // Deletes a machine and its entries.
-export async function DELETE(_request: NextRequest, context: RouteContext<'/api/machines/[id]'>) {
-  const guard = apiNotFoundOutsideDeploymentMode()
+export async function DELETE(request: NextRequest, context: RouteContext<'/api/machines/[id]'>) {
+  const guard = guardApiRequest(request)
   if (guard) {
     return guard
   }
