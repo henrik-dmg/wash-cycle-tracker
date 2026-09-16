@@ -1,8 +1,14 @@
 import { NextResponse } from 'next/server'
-import { createMachine, listMachines, MachineInputError, validateMachineName } from '../../../lib/machine.service'
+import { apiNotFoundOutsideDeploymentMode } from '../../../lib/api-guard'
 
 // Lists all machines.
 export async function GET() {
+  const guard = apiNotFoundOutsideDeploymentMode()
+  if (guard) {
+    return guard
+  }
+
+  const { listMachines } = await import('../../../lib/machine.service')
   try {
     const machines = await listMachines()
     return NextResponse.json(machines)
@@ -14,6 +20,12 @@ export async function GET() {
 
 // Creates a machine. The body is `{ "name": string }`.
 export async function POST(request: Request) {
+  const guard = apiNotFoundOutsideDeploymentMode()
+  if (guard) {
+    return guard
+  }
+
+  const { createMachine, MachineInputError, validateMachineName } = await import('../../../lib/machine.service')
   try {
     const name = validateMachineName(await request.json().catch(() => ({})))
     const machine = await createMachine(name)

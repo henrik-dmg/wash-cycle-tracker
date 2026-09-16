@@ -14,6 +14,13 @@ A self-hosted app for one person. It records the washes and cleanings of your wa
 
 `pnpm test` runs the Vitest suite.
 
+## Deployment mode
+
+`DEPLOYMENT_MODE` selects which site the app serves. It accepts `deployment` (the default) or `marketing`. Any other value stops the app at start with an error.
+
+- `deployment`: `/` is the tracker. The landing page and `/demo` return 404.
+- `marketing`: `/` is the landing page. All API routes and `/help` return 404, the app never opens a database, and the container does not run migrations.
+
 ## Docker
 
 `docker compose up -d` builds the image from source and starts the app on port 3000. The container applies the migrations when it starts. The SQLite database is in the `db-data` volume.

@@ -1,14 +1,20 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { deleteMachine, getMachine, MachineInputError, renameMachine, validateMachineName } from '../../../../lib/machine.service'
+import { apiNotFoundOutsideDeploymentMode } from '../../../../lib/api-guard'
 
 // Gets one machine with its entries.
 export async function GET(_request: NextRequest, context: RouteContext<'/api/machines/[id]'>) {
+  const guard = apiNotFoundOutsideDeploymentMode()
+  if (guard) {
+    return guard
+  }
+
   const { id } = await context.params
   const machineId = parseInt(id)
   if (!machineId) {
     return NextResponse.json({ message: 'Invalid machine ID' }, { status: 400 })
   }
 
+  const { getMachine } = await import('../../../../lib/machine.service')
   try {
     const machine = await getMachine(machineId)
     if (!machine) {
@@ -23,12 +29,18 @@ export async function GET(_request: NextRequest, context: RouteContext<'/api/mac
 
 // Renames a machine. The body is `{ "name": string }`.
 export async function PATCH(request: NextRequest, context: RouteContext<'/api/machines/[id]'>) {
+  const guard = apiNotFoundOutsideDeploymentMode()
+  if (guard) {
+    return guard
+  }
+
   const { id } = await context.params
   const machineId = parseInt(id)
   if (!machineId) {
     return NextResponse.json({ message: 'Invalid machine ID' }, { status: 400 })
   }
 
+  const { MachineInputError, renameMachine, validateMachineName } = await import('../../../../lib/machine.service')
   try {
     const name = validateMachineName(await request.json().catch(() => ({})))
     const machine = await renameMachine(machineId, name)
@@ -47,12 +59,18 @@ export async function PATCH(request: NextRequest, context: RouteContext<'/api/ma
 
 // Deletes a machine and its entries.
 export async function DELETE(_request: NextRequest, context: RouteContext<'/api/machines/[id]'>) {
+  const guard = apiNotFoundOutsideDeploymentMode()
+  if (guard) {
+    return guard
+  }
+
   const { id } = await context.params
   const machineId = parseInt(id)
   if (!machineId) {
     return NextResponse.json({ message: 'Invalid machine ID' }, { status: 400 })
   }
 
+  const { deleteMachine } = await import('../../../../lib/machine.service')
   try {
     const deleted = await deleteMachine(machineId)
     if (!deleted) {

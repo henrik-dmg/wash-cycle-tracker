@@ -1,7 +1,12 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { deleteEntry } from '../../../../../../lib/machine.service'
+import { apiNotFoundOutsideDeploymentMode } from '../../../../../../lib/api-guard'
 
 export async function DELETE(_request: NextRequest, context: RouteContext<'/api/machines/[id]/entries/[entryId]'>) {
+  const guard = apiNotFoundOutsideDeploymentMode()
+  if (guard) {
+    return guard
+  }
+
   const { id, entryId } = await context.params
   const machineId = parseInt(id)
   const parsedEntryId = parseInt(entryId)
@@ -9,6 +14,7 @@ export async function DELETE(_request: NextRequest, context: RouteContext<'/api/
     return NextResponse.json({ message: 'Invalid machine or entry ID' }, { status: 400 })
   }
 
+  const { deleteEntry } = await import('../../../../../../lib/machine.service')
   try {
     const deleted = await deleteEntry(machineId, parsedEntryId)
     if (!deleted) {
