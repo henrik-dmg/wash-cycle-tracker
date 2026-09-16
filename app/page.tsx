@@ -1,7 +1,5 @@
-import Head from 'next/head'
 import Link from 'next/link'
-import type { NextPage } from 'next'
-import { useUser } from '@auth0/nextjs-auth0'
+import { auth0 } from '../lib/auth0'
 import {
   ArrowRightIcon,
   BellAlertIcon,
@@ -89,16 +87,13 @@ const trustBadges = [
 
 const weeklyCycles = [38, 52, 46, 61, 58, 74, 49]
 
-const HomePage: NextPage = () => {
-  const { user } = useUser()
+export default async function HomePage() {
+  const session = await auth0.getSession()
+  const user = session?.user
   const primaryHref = user ? '/machines' : '/auth/login'
   const primaryLabel = user ? 'Go to your machines' : 'Get started free'
 
   return (
-    <>
-      <Head>
-        <title>Washing Machine Server</title>
-      </Head>
       <main className={styles.defaultContainer}>
         {/* Hero */}
         <section className="grid gap-12 py-16 lg:grid-cols-2 lg:items-center lg:py-24">
@@ -251,8 +246,5 @@ const HomePage: NextPage = () => {
           </div>
         </section>
       </main>
-    </>
   )
 }
-
-export default HomePage

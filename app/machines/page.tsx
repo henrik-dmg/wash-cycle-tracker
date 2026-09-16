@@ -1,24 +1,20 @@
-import { auth0 } from '../../lib/auth0'
-import { fetchMachinesForUser } from '../../lib/machine.service'
-import { Machine } from '../../lib/generated/prisma/client'
-import type { NextPage } from 'next'
 import Link from 'next/link'
-import styles from '../../styles/Default.module.css'
 import { PlusIcon, ArrowRightIcon, Squares2X2Icon } from '@heroicons/react/24/outline'
+import { fetchMachinesForUser } from '../../lib/machine.service'
+import { requireSession } from '../../lib/session.utilities'
+import styles from '../../styles/Default.module.css'
 
-interface Props {
-  user: any
-  machines: Machine[]
-}
+export default async function MachinesPage() {
+  const { user } = await requireSession('/machines')
+  const machines = await fetchMachinesForUser(user.sub)
 
-const MachinesPage: NextPage<Props> = (props) => {
   return (
     <main className={styles.defaultContainer}>
       <div className="flex flex-wrap items-center justify-between gap-4 py-10">
         <div>
           <span className="stat-chip">
             <Squares2X2Icon className="h-3.5 w-3.5" />
-            {props.machines.length} machine{props.machines.length === 1 ? '' : 's'}
+            {machines.length} machine{machines.length === 1 ? '' : 's'}
           </span>
           <h1 className="mt-3 text-3xl font-bold text-zinc-900 dark:text-white">Your machines</h1>
           <p className="mt-1 text-zinc-600 dark:text-zinc-300">Pick a machine to view its cycle history.</p>
@@ -32,14 +28,14 @@ const MachinesPage: NextPage<Props> = (props) => {
         </Link>
       </div>
 
-      {props.machines.length === 0 && (
+      {machines.length === 0 && (
         <div className="glass-card p-10 text-center text-zinc-600 dark:text-zinc-300">
           No machines yet. Add your first one to start tracking cycles.
         </div>
       )}
 
       <div className="grid gap-5 pb-16 sm:grid-cols-2 lg:grid-cols-3">
-        {props.machines.map((machine) => (
+        {machines.map((machine) => (
           <Link key={machine.id} href={`/machines/${machine.id}`} className="glass-card group block p-6 transition-transform hover:-translate-y-1">
             <div className="flex items-start justify-between">
               <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{machine.name}</h2>
@@ -52,22 +48,3 @@ const MachinesPage: NextPage<Props> = (props) => {
     </main>
   )
 }
-
-export default MachinesPage
-
-export const getServerSideProps = auth0.withPageAuthRequired({
-  async getServerSideProps(context) {
-    try {
-      const session = await auth0.getSession(context.req)
-      if (!session) {
-        throw "User session doesn't exist"
-      }
-      const { user } = session
-      const machines = await fetchMachinesForUser(user.sub)
-      return { props: { machines: machines } }
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
-  },
-})

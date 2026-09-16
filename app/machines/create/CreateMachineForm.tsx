@@ -1,13 +1,13 @@
-import { auth0 } from '../../lib/auth0'
-import type { NextPage } from 'next'
-import { useRouter } from 'next/router'
+'use client'
+
+import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import styles from '../../styles/Default.module.css'
-import { Machine } from '../../lib/generated/prisma/client'
+import styles from '../../../styles/Default.module.css'
+import type { Machine } from '../../../lib/generated/prisma/client'
 import { SyntheticEvent } from 'react'
 import { PlusIcon } from '@heroicons/react/24/outline'
 
-const CreateMachine: NextPage = () => {
+export default function CreateMachineForm() {
   const router = useRouter()
 
   const createNewMachineAndNavigate = async (event: SyntheticEvent) => {
@@ -49,7 +49,7 @@ const CreateMachine: NextPage = () => {
     const result: Machine = await response.json()
 
     if (result) {
-      await router.push(`/machines/${result.id}`)
+      router.push(`/machines/${result.id}`)
     } else {
       throw 'Could not create machine'
     }
@@ -116,7 +116,3 @@ const CreateMachine: NextPage = () => {
     </main>
   )
 }
-
-export default CreateMachine
-
-export const getServerSideProps = auth0.withPageAuthRequired()

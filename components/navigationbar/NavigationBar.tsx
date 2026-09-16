@@ -1,15 +1,15 @@
+'use client'
+
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useUser } from '@auth0/nextjs-auth0'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import styles from './navigationbar.module.css'
 import { highlightableItem } from '../../lib/style.utilities'
 
-interface Props {
-  path: string
-}
-
-const NavigationBar = (props: Props) => {
+const NavigationBar = () => {
+  const pathname = usePathname()
   const [active, setActive] = useState(false)
   const { user } = useUser()
 
@@ -17,7 +17,7 @@ const NavigationBar = (props: Props) => {
     setActive(!active)
   }
 
-  const isCurrent = (href: string) => (href === '/' ? props.path === '/' : props.path.startsWith(href))
+  const isCurrent = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href))
 
   return (
     <nav className={styles.navbar}>

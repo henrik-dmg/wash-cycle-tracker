@@ -1,16 +1,25 @@
-import { auth0 } from './auth0'
+import { redirect } from 'next/navigation'
+import { NextResponse, type NextRequest } from 'next/server'
 import type { SessionData } from '@auth0/nextjs-auth0/types'
-import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next'
+import { auth0 } from './auth0'
 
-export type APIHandlerWithSession<T = any> = (req: NextApiRequest, res: NextApiResponse<T>, session: SessionData) => unknown | Promise<unknown>
-export type HandlerWithSessionEnsured<T = any> = (apiRoute: APIHandlerWithSession<T>) => NextApiHandler<T>
+export type RouteHandlerWithSession<Context> = (request: NextRequest, context: Context, session: SessionData) => Promise<Response>
 
-export const withSessionEnsured: HandlerWithSessionEnsured = (apiRoute) => {
-  return auth0.withApiAuthRequired(async (request: NextApiRequest, response: NextApiResponse) => {
-    const session = await auth0.getSession(request)
+// Returns the session of the signed-in user, or sends the user to the login page and back to `returnTo`.
+export async function requireSession(returnTo: string): Promise<SessionData> {
+  const session = await auth0.getSession()
+  if (!session) {
+    redirect(`/auth/login?returnTo=${encodeURIComponent(returnTo)}`)
+  }
+  return session
+}
+
+export function withSessionEnsured<Context>(handler: RouteHandlerWithSession<Context>) {
+  return async (request: NextRequest, context: Context) => {
+    const session = await auth0.getSession()
     if (!session) {
-      return response.status(500).json({ message: 'Session was not ensured by the server' })
+      return NextResponse.json({ message: 'Not authenticated' }, { status: 401 })
     }
-    return apiRoute(request, response, session)
-  })
+    return handler(request, context, session)
+  }
 }

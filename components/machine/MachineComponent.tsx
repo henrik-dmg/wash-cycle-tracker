@@ -1,3 +1,5 @@
+'use client'
+
 import { highlightableItem } from '../../lib/style.utilities'
 import { Action } from '../../lib/generated/prisma/client'
 import { FunctionComponent, useState } from 'react'
