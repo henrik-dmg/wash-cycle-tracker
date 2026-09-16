@@ -24,6 +24,11 @@ const routes: RouteEntry[] = [
     load: () => import('../../app/api/machines/[id]/entries/route'),
   },
   {
+    pattern: /^\/api\/machines\/([^/]+)\/cleaning-interval$/,
+    paramNames: ['id'],
+    load: () => import('../../app/api/machines/[id]/cleaning-interval/route'),
+  },
+  {
     pattern: /^\/api\/machines\/([^/]+)$/,
     paramNames: ['id'],
     load: () => import('../../app/api/machines/[id]/route'),

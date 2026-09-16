@@ -1,5 +1,5 @@
 import type { EntryKind } from './generated/prisma/client'
-import { washesSinceCleaning } from './entry.domain'
+import { isDueForCleaning, washesSinceCleaning } from './entry.domain'
 import prisma from './prisma'
 
 export type { EntryKind }
@@ -8,7 +8,9 @@ export { washesSinceCleaning }
 export interface MachineListItem {
   id: number
   name: string
+  cleaningInterval: number | null
   washesSinceCleaning: number
+  dueForCleaning: boolean
   // ISO 8601 UTC string. Null when the machine has no entry.
   latestEntryAt: string | null
 }
@@ -25,6 +27,7 @@ export interface MachineDetails {
   name: string
   cleaningInterval: number | null
   washesSinceCleaning: number
+  dueForCleaning: boolean
   // Newest first.
   entries: EntryItem[]
 }
@@ -45,6 +48,20 @@ export function isEntryKind(value: unknown): value is EntryKind {
   return value === 'wash' || value === 'cleaning'
 }
 
+// Checks and cleans the cleaning interval of a machine. `null` clears the interval. Throws a
+// MachineInputError for anything else that is not a positive integer.
+export function validateCleaningInterval(body: unknown): number | null {
+  const input = (body ?? {}) as Record<string, unknown>
+  if (input.cleaningInterval === null) {
+    return null
+  }
+  const value = input.cleaningInterval
+  if (typeof value !== 'number' || !Number.isInteger(value) || value <= 0) {
+    throw new MachineInputError('The cleaning interval must be a positive integer, or null to clear it')
+  }
+  return value
+}
+
 function toEntryItem(entry: { id: number; kind: EntryKind; occurredAt: Date }): EntryItem {
   return { id: entry.id, kind: entry.kind, occurredAt: entry.occurredAt.toISOString() }
 }
@@ -52,13 +69,17 @@ function toEntryItem(entry: { id: number; kind: EntryKind; occurredAt: Date }): 
 function toMachineListItem(machine: {
   id: number
   name: string
+  cleaningInterval: number | null
   entries: { id: number; kind: EntryKind; occurredAt: Date }[]
 }): MachineListItem {
   const entries = machine.entries.map(toEntryItem)
+  const washes = washesSinceCleaning(entries)
   return {
     id: machine.id,
     name: machine.name,
-    washesSinceCleaning: washesSinceCleaning(entries),
+    cleaningInterval: machine.cleaningInterval,
+    washesSinceCleaning: washes,
+    dueForCleaning: isDueForCleaning(washes, machine.cleaningInterval),
     latestEntryAt: entries[0]?.occurredAt ?? null,
   }
 }
@@ -100,23 +121,39 @@ export async function getMachine(machineId: number): Promise<MachineDetails | nu
     return null
   }
   const entries = machine.entries.map(toEntryItem)
+  const washes = washesSinceCleaning(entries)
   return {
     id: machine.id,
     name: machine.name,
     cleaningInterval: machine.cleaningInterval,
-    washesSinceCleaning: washesSinceCleaning(entries),
+    washesSinceCleaning: washes,
+    dueForCleaning: isDueForCleaning(washes, machine.cleaningInterval),
     entries,
   }
 }
 
 export async function createMachine(name: string): Promise<MachineListItem> {
-  const machine = await prisma.machine.create({ data: { name }, select: { id: true, name: true } })
-  return { id: machine.id, name: machine.name, washesSinceCleaning: 0, latestEntryAt: null }
+  const machine = await prisma.machine.create({
+    data: { name },
+    select: { id: true, name: true, cleaningInterval: true },
+  })
+  return {
+    id: machine.id,
+    name: machine.name,
+    cleaningInterval: machine.cleaningInterval,
+    washesSinceCleaning: 0,
+    dueForCleaning: false,
+    latestEntryAt: null,
+  }
 }
 
-// Renames a machine. Returns null if the machine does not exist.
-export async function renameMachine(machineId: number, name: string): Promise<MachineListItem | null> {
-  const { count } = await prisma.machine.updateMany({ where: { id: machineId }, data: { name } })
+// Applies a partial update to a machine and returns its updated summary. Returns null if the
+// machine does not exist.
+async function updateMachineFields(
+  machineId: number,
+  data: { name?: string; cleaningInterval?: number | null }
+): Promise<MachineListItem | null> {
+  const { count } = await prisma.machine.updateMany({ where: { id: machineId }, data })
   if (count === 0) {
     return null
   }
@@ -125,6 +162,16 @@ export async function renameMachine(machineId: number, name: string): Promise<Ma
     include: { entries: { orderBy: { occurredAt: 'desc' } } },
   })
   return toMachineListItem(machine)
+}
+
+// Renames a machine. Returns null if the machine does not exist.
+export function renameMachine(machineId: number, name: string): Promise<MachineListItem | null> {
+  return updateMachineFields(machineId, { name })
+}
+
+// Sets or clears the cleaning interval of a machine. Returns null if the machine does not exist.
+export function setCleaningInterval(machineId: number, cleaningInterval: number | null): Promise<MachineListItem | null> {
+  return updateMachineFields(machineId, { cleaningInterval })
 }
 
 // Deletes a machine and its entries. Returns false if the machine does not exist.

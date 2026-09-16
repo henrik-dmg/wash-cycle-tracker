@@ -15,3 +15,9 @@ export function washesSinceCleaning(entries: EntryLike[]): number {
   const threshold = latestCleaning ? Date.parse(latestCleaning.occurredAt) : -Infinity
   return sorted.filter((entry) => entry.kind === 'wash' && Date.parse(entry.occurredAt) > threshold).length
 }
+
+// Decides if a machine is due for cleaning. A machine is due when it has a cleaning interval and
+// its washes since cleaning are equal to or more than that interval.
+export function isDueForCleaning(washCount: number, cleaningInterval: number | null): boolean {
+  return cleaningInterval !== null && washCount >= cleaningInterval
+}

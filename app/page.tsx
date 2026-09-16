@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { PlusIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
+import { PlusIcon, ArrowRightIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
 import Loader from '../components/loader/Loader'
 import { useMachineStore } from '../lib/store/context'
@@ -55,7 +55,9 @@ export default function HomePage() {
             <Link
               key={machine.id}
               href={`/machines/${machine.id}`}
-              className="glass-card group block p-6 transition-transform hover:-translate-y-1"
+              className={`glass-card group block p-6 transition-transform hover:-translate-y-1 ${
+                machine.dueForCleaning ? 'ring-2 ring-amber-500 dark:ring-amber-400' : ''
+              }`}
             >
               <div className="flex items-start justify-between">
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{machine.name}</h2>
@@ -64,6 +66,12 @@ export default function HomePage() {
               <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
                 {machine.washesSinceCleaning} {machine.washesSinceCleaning === 1 ? 'wash' : 'washes'} since cleaning
               </p>
+              {machine.dueForCleaning && (
+                <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800 dark:bg-amber-500/20 dark:text-amber-300">
+                  <ExclamationTriangleIcon className="h-3.5 w-3.5" />
+                  Due for cleaning
+                </span>
+              )}
               {machine.latestEntryAt && (
                 <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500" suppressHydrationWarning>
                   Latest entry: {new Date(machine.latestEntryAt).toLocaleString()}

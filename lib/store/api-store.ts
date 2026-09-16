@@ -21,6 +21,9 @@ export function createApiMachineStore(): MachineStore {
     renameMachine(machineId, name) {
       return sendJson<MachineListItem>(`/api/machines/${machineId}`, 'PATCH', { name })
     },
+    setCleaningInterval(machineId, cleaningInterval) {
+      return sendJson<MachineListItem>(`/api/machines/${machineId}/cleaning-interval`, 'PATCH', { cleaningInterval })
+    },
     deleteMachine(machineId) {
       return sendJson<void>(`/api/machines/${machineId}`, 'DELETE')
     },

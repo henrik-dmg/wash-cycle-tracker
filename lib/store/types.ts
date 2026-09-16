@@ -10,6 +10,8 @@ export interface MachineStore {
   getMachine(machineId: number): Promise<MachineDetails | null>
   createMachine(name: string): Promise<MachineListItem>
   renameMachine(machineId: number, name: string): Promise<MachineListItem>
+  // `null` clears the cleaning interval.
+  setCleaningInterval(machineId: number, cleaningInterval: number | null): Promise<MachineListItem>
   deleteMachine(machineId: number): Promise<void>
   // occurredAt is an ISO 8601 string. Uses the current time when it is not given.
   logEntry(machineId: number, kind: EntryKind, occurredAt?: string): Promise<EntryItem>

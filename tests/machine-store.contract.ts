@@ -158,4 +158,74 @@ export function runMachineStoreContract(getStore: () => MachineStore) {
       expect(details?.washesSinceCleaning).toBe(1)
     })
   })
+
+  describe('due for cleaning', () => {
+    test('is not due when the machine has no cleaning interval', async () => {
+      const store = getStore()
+      const machine = await store.createMachine('No interval')
+      await store.logEntry(machine.id, 'wash')
+
+      const details = await store.getMachine(machine.id)
+      expect(details?.dueForCleaning).toBe(false)
+    })
+
+    test('is due once the washes since cleaning reach the interval', async () => {
+      const store = getStore()
+      const machine = await store.createMachine('With interval')
+      await store.setCleaningInterval(machine.id, 2)
+      await store.logEntry(machine.id, 'wash')
+
+      let details = await store.getMachine(machine.id)
+      expect(details?.dueForCleaning).toBe(false)
+
+      await store.logEntry(machine.id, 'wash')
+
+      details = await store.getMachine(machine.id)
+      expect(details?.dueForCleaning).toBe(true)
+    })
+
+    test('is no longer due right after a cleaning is logged', async () => {
+      const store = getStore()
+      const machine = await store.createMachine('Cleaned again')
+      await store.setCleaningInterval(machine.id, 1)
+      await store.logEntry(machine.id, 'wash')
+
+      let details = await store.getMachine(machine.id)
+      expect(details?.dueForCleaning).toBe(true)
+
+      await store.logEntry(machine.id, 'cleaning')
+
+      details = await store.getMachine(machine.id)
+      expect(details?.dueForCleaning).toBe(false)
+    })
+
+    test('clears the cleaning interval', async () => {
+      const store = getStore()
+      const machine = await store.createMachine('Clear interval')
+      await store.setCleaningInterval(machine.id, 1)
+      await store.logEntry(machine.id, 'wash')
+
+      let details = await store.getMachine(machine.id)
+      expect(details?.dueForCleaning).toBe(true)
+
+      const cleared = await store.setCleaningInterval(machine.id, null)
+      expect(cleared.cleaningInterval).toBeNull()
+
+      details = await store.getMachine(machine.id)
+      expect(details?.cleaningInterval).toBeNull()
+      expect(details?.dueForCleaning).toBe(false)
+    })
+
+    test('rejects an invalid cleaning interval', async () => {
+      const store = getStore()
+      const machine = await store.createMachine('Invalid interval')
+      await expect(store.setCleaningInterval(machine.id, 0)).rejects.toThrow()
+      await expect(store.setCleaningInterval(machine.id, -1)).rejects.toThrow()
+    })
+
+    test('reports not found when setting the interval of an unknown machine', async () => {
+      const store = getStore()
+      await expect(store.setCleaningInterval(999_999, 5)).rejects.toThrow()
+    })
+  })
 }
