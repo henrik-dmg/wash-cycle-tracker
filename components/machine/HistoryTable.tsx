@@ -1,7 +1,7 @@
 'use client'
 
 import { highlightableItem } from '../../lib/style.utilities'
-import type { EntryItem } from '../../lib/machine.service'
+import type { EntryItem } from '../../lib/machine.model'
 
 interface Props {
   // Newest first.

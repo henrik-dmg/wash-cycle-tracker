@@ -6,16 +6,17 @@ import styles from '../../../styles/Default.module.css'
 import { FormEvent } from 'react'
 import { PlusIcon } from '@heroicons/react/24/outline'
 import MachineFormFields, { readMachineForm } from '../../../components/machine/MachineFormFields'
-import { useMachineStore } from '../../../lib/store/context'
+import { useMachineStore, useTrackerPath } from '../../../lib/store/context'
 
 export default function CreateMachineForm() {
   const router = useRouter()
   const store = useMachineStore()
+  const trackerPath = useTrackerPath()
 
   const createNewMachineAndNavigate = async (form: HTMLFormElement) => {
     const { name } = readMachineForm(form)
     const machine = await store.createMachine(name)
-    router.push(`/machines/${machine.id}`)
+    router.push(trackerPath(`/machines/${machine.id}`))
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
