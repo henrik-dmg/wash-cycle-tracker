@@ -5,12 +5,13 @@ import { useEffect, useState } from 'react'
 import { PlusIcon, ArrowRightIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
 import Loader from '../loader/Loader'
-import { useMachineStore } from '../../lib/store/context'
+import { useMachineStore, useTrackerPath } from '../../lib/store/context'
 import type { MachineListItem } from '../../lib/store/types'
 import styles from '../../styles/Default.module.css'
 
 export default function TrackerHome() {
   const store = useMachineStore()
+  const trackerPath = useTrackerPath()
   const [machines, setMachines] = useState<MachineListItem[] | null>(null)
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function TrackerHome() {
       <div className="flex flex-wrap items-center justify-between gap-4 py-10">
         <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Your machines</h1>
         <Link
-          href="/machines/create"
+          href={trackerPath('/machines/create')}
           className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-colors hover:from-indigo-600 hover:to-purple-700"
         >
           <PlusIcon className="h-4 w-4" />
@@ -54,7 +55,7 @@ export default function TrackerHome() {
           {machines.map((machine) => (
             <Link
               key={machine.id}
-              href={`/machines/${machine.id}`}
+              href={trackerPath(`/machines/${machine.id}`)}
               className={`glass-card group block p-6 transition-transform hover:-translate-y-1 ${
                 machine.dueForCleaning ? 'ring-2 ring-amber-500 dark:ring-amber-400' : ''
               }`}

@@ -1,7 +1,7 @@
-import type { EntryItem, EntryKind, MachineDetails, MachineListItem } from '../machine.service'
+import type { EntryItem, EntryKind, MachineDetails, MachineListItem } from '../machine.model'
 
 export type { EntryItem, EntryKind, MachineDetails, MachineListItem }
-export { MachineInputError } from '../machine.service'
+export { MachineInputError } from '../machine.model'
 
 // The seam between the tracker screens and their data. Every tracker screen calls this
 // interface through a React context, never `fetch` or localStorage directly.

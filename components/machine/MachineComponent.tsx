@@ -12,7 +12,7 @@ import {
   SparklesIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline'
-import { useMachineStore } from '../../lib/store/context'
+import { useMachineStore, useTrackerPath } from '../../lib/store/context'
 import type { EntryItem, EntryKind, MachineDetails } from '../../lib/store/types'
 // Imported straight from the domain module, not through the store seam: re-exporting a value
 // through `store/types.ts` trips a Turbopack dev-mode bug that leaves the machine page unbuilt.
@@ -31,6 +31,7 @@ function localInputToIso(value: string): string {
 
 const MachineComponent: FunctionComponent<Props> = ({ machine }) => {
   const store = useMachineStore()
+  const trackerPath = useTrackerPath()
   const router = useRouter()
   const [name, setName] = useState(machine.name)
   const [cleaningInterval, setLocalCleaningInterval] = useState(machine.cleaningInterval)
@@ -118,7 +119,7 @@ const MachineComponent: FunctionComponent<Props> = ({ machine }) => {
     try {
       await store.deleteMachine(machine.id)
       toast.success('Machine deleted')
-      router.push('/')
+      router.push(trackerPath())
     } catch (error) {
       toast.error((error as Error).message)
     }
