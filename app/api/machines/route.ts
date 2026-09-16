@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server'
-import { apiNotFoundOutsideDeploymentMode } from '../../../lib/api-guard'
+import { NextResponse, type NextRequest } from 'next/server'
+import { guardApiRequest } from '../../../lib/api-guard'
 
 // Lists all machines.
-export async function GET() {
-  const guard = apiNotFoundOutsideDeploymentMode()
+export async function GET(request: NextRequest) {
+  const guard = guardApiRequest(request)
   if (guard) {
     return guard
   }
@@ -19,8 +19,8 @@ export async function GET() {
 }
 
 // Creates a machine. The body is `{ "name": string }`.
-export async function POST(request: Request) {
-  const guard = apiNotFoundOutsideDeploymentMode()
+export async function POST(request: NextRequest) {
+  const guard = guardApiRequest(request)
   if (guard) {
     return guard
   }

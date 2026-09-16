@@ -1,10 +1,10 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { apiNotFoundOutsideDeploymentMode } from '../../../../../lib/api-guard'
+import { guardApiRequest } from '../../../../../lib/api-guard'
 
 // Logs a wash or a cleaning. The body is `{ "kind": "wash" | "cleaning", "occurredAt"?: string }`.
 // Uses the current time when occurredAt is not given.
 export async function POST(request: NextRequest, context: RouteContext<'/api/machines/[id]/entries'>) {
-  const guard = apiNotFoundOutsideDeploymentMode()
+  const guard = guardApiRequest(request)
   if (guard) {
     return guard
   }

@@ -34,13 +34,22 @@ const routes: RouteEntry[] = [
     load: () => import('../../app/api/machines/[id]/route'),
   },
   {
+    pattern: /^\/api\/session$/,
+    paramNames: [],
+    load: () => import('../../app/api/session/route'),
+  },
+  {
     pattern: /^\/api\/machines$/,
     paramNames: [],
     load: () => import('../../app/api/machines/route'),
   },
 ]
 
+// Like a browser, each fetch function keeps the cookies that responses set and sends them back
+// on later requests. Create a new fetch function to start without cookies.
 export function createInProcessFetch(): typeof fetch {
+  const cookieJar = new Map<string, string>()
+
   return (async (input: RequestInfo | URL, init?: RequestInit) => {
     const rawUrl = typeof input === 'string' ? input : input.toString()
     const url = new URL(rawUrl, 'http://localhost')
@@ -60,7 +69,28 @@ export function createInProcessFetch(): typeof fetch {
       return NextResponse.json({ message: 'Method not allowed' }, { status: 405 })
     }
 
-    const request = new NextRequest(url, { method, headers: init?.headers, body: init?.body as BodyInit | null | undefined })
-    return handler(request, { params: Promise.resolve(params) })
+    const headers = new Headers(init?.headers)
+    if (cookieJar.size > 0 && !headers.has('cookie')) {
+      headers.set('cookie', [...cookieJar].map(([name, value]) => `${name}=${value}`).join('; '))
+    }
+    const request = new NextRequest(url, { method, headers, body: init?.body as BodyInit | null | undefined })
+    const response = await handler(request, { params: Promise.resolve(params) })
+    storeCookies(cookieJar, response)
+    return response
   }) as typeof fetch
+}
+
+function storeCookies(cookieJar: Map<string, string>, response: Response) {
+  for (const header of response.headers.getSetCookie()) {
+    const [pair, ...attributes] = header.split(';')
+    const separator = pair.indexOf('=')
+    const name = pair.slice(0, separator).trim()
+    const value = pair.slice(separator + 1).trim()
+    const expired = attributes.some((attribute) => /^\s*max-age=0\s*$/i.test(attribute))
+    if (expired || value === '') {
+      cookieJar.delete(name)
+    } else {
+      cookieJar.set(name, value)
+    }
+  }
 }
