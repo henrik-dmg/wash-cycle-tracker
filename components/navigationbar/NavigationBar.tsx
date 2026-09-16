@@ -35,9 +35,14 @@ const NavigationBar = ({ mode }: { mode: DeploymentMode }) => {
         <div className={`${active ? '' : 'hidden'} w-full lg:inline-flex lg:flex-grow lg:w-auto`}>
           <div className="lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start flex flex-col lg:h-auto gap-1 py-2 lg:py-0">
             {mode === 'deployment' ? (
-              <Link href="/" className={`${styles.navbarItem} ${isMachinesCurrent ? styles.navbarItemActive : ''}`} onClick={handleClick}>
-                Machines
-              </Link>
+              <>
+                <Link href="/" className={`${styles.navbarItem} ${isMachinesCurrent ? styles.navbarItemActive : ''}`} onClick={handleClick}>
+                  Machines
+                </Link>
+                <Link href="/help" className={`${styles.navbarItem} ${pathname === '/help' ? styles.navbarItemActive : ''}`} onClick={handleClick}>
+                  Help
+                </Link>
+              </>
             ) : (
               <>
                 <Link href="/demo" className={styles.navbarItem} onClick={handleClick}>
