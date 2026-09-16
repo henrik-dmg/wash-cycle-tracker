@@ -67,6 +67,21 @@ export async function createMachine(name: string): Promise<MachineListItem> {
   return prisma.machine.create({ data: { name }, select: { id: true, name: true } })
 }
 
+// Renames a machine. Returns null if the machine does not exist.
+export async function renameMachine(machineId: number, name: string): Promise<MachineListItem | null> {
+  const { count } = await prisma.machine.updateMany({ where: { id: machineId }, data: { name } })
+  if (count === 0) {
+    return null
+  }
+  return { id: machineId, name }
+}
+
+// Deletes a machine and its entries. Returns false if the machine does not exist.
+export async function deleteMachine(machineId: number): Promise<boolean> {
+  const { count } = await prisma.machine.deleteMany({ where: { id: machineId } })
+  return count > 0
+}
+
 // Logs an entry at the current time. Returns null if the machine does not exist.
 export async function logEntry(machineId: number, kind: EntryKind): Promise<EntryItem | null> {
   const machine = await prisma.machine.findUnique({ where: { id: machineId }, select: { id: true } })

@@ -3,17 +3,18 @@
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import styles from '../../../styles/Default.module.css'
-import type { MachineListItem } from '../../../lib/machine.service'
 import { FormEvent } from 'react'
 import { PlusIcon } from '@heroicons/react/24/outline'
 import MachineFormFields, { readMachineForm } from '../../../components/machine/MachineFormFields'
-import { sendJson } from '../../../lib/fetch.utilities'
+import { useMachineStore } from '../../../lib/store/context'
 
 export default function CreateMachineForm() {
   const router = useRouter()
+  const store = useMachineStore()
 
   const createNewMachineAndNavigate = async (form: HTMLFormElement) => {
-    const machine = await sendJson<MachineListItem>('/api/machines/create', 'POST', readMachineForm(form))
+    const { name } = readMachineForm(form)
+    const machine = await store.createMachine(name)
     router.push(`/machines/${machine.id}`)
   }
 

@@ -1,13 +1,32 @@
+'use client'
+
 import Link from 'next/link'
-import { connection } from 'next/server'
+import { useEffect, useState } from 'react'
 import { PlusIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
-import { listMachines } from '../lib/machine.service'
+import toast from 'react-hot-toast'
+import Loader from '../components/loader/Loader'
+import { useMachineStore } from '../lib/store/context'
+import type { MachineListItem } from '../lib/store/types'
 import styles from '../styles/Default.module.css'
 
-export default async function HomePage() {
-  // The database query must run for each request, not at build time.
-  await connection()
-  const machines = await listMachines()
+export default function HomePage() {
+  const store = useMachineStore()
+  const [machines, setMachines] = useState<MachineListItem[] | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    store
+      .listMachines()
+      .then((result) => {
+        if (!cancelled) {
+          setMachines(result)
+        }
+      })
+      .catch((error: Error) => toast.error(error.message))
+    return () => {
+      cancelled = true
+    }
+  }, [store])
 
   return (
     <main className={styles.defaultContainer}>
@@ -22,22 +41,30 @@ export default async function HomePage() {
         </Link>
       </div>
 
-      {machines.length === 0 && <div className="glass-card p-10 text-center text-zinc-600 dark:text-zinc-300">No machines yet.</div>}
+      {machines === null && (
+        <div className="flex justify-center py-16">
+          <Loader isShown />
+        </div>
+      )}
 
-      <div className="grid gap-5 pb-16 sm:grid-cols-2 lg:grid-cols-3">
-        {machines.map((machine) => (
-          <Link
-            key={machine.id}
-            href={`/machines/${machine.id}`}
-            className="glass-card group block p-6 transition-transform hover:-translate-y-1"
-          >
-            <div className="flex items-start justify-between">
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{machine.name}</h2>
-              <ArrowRightIcon className="h-4 w-4 flex-shrink-0 text-zinc-400 transition-transform group-hover:translate-x-1 group-hover:text-indigo-500" />
-            </div>
-          </Link>
-        ))}
-      </div>
+      {machines?.length === 0 && <div className="glass-card p-10 text-center text-zinc-600 dark:text-zinc-300">No machines yet.</div>}
+
+      {machines && machines.length > 0 && (
+        <div className="grid gap-5 pb-16 sm:grid-cols-2 lg:grid-cols-3">
+          {machines.map((machine) => (
+            <Link
+              key={machine.id}
+              href={`/machines/${machine.id}`}
+              className="glass-card group block p-6 transition-transform hover:-translate-y-1"
+            >
+              <div className="flex items-start justify-between">
+                <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{machine.name}</h2>
+                <ArrowRightIcon className="h-4 w-4 flex-shrink-0 text-zinc-400 transition-transform group-hover:translate-x-1 group-hover:text-indigo-500" />
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </main>
   )
 }

@@ -12,6 +12,8 @@ A self-hosted app for one person. It records the washes and cleanings of your wa
 
 `pnpm seed` replaces all data with sample machines and entries.
 
+`pnpm test` runs the Vitest suite.
+
 ## Docker
 
 `docker compose up -d` builds the image from source and starts the app on port 3000. The container applies the migrations when it starts. The SQLite database is in the `db-data` volume.

@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 import NavigationBar from '../components/navigationbar/NavigationBar'
+import { MachineStoreProvider } from '../lib/store/context'
 
 export const metadata: Metadata = {
   title: 'Washing Machine Server',
@@ -14,11 +15,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className="bg-white text-zinc-900 dark:bg-zinc-800 dark:text-white">
         <div className="gradient-mesh" aria-hidden="true" />
-        <div className="min-h-screen">
-          <NavigationBar />
-          {children}
-        </div>
-        <Toaster position="bottom-center" />
+        <MachineStoreProvider>
+          <div className="min-h-screen">
+            <NavigationBar />
+            {children}
+          </div>
+          <Toaster position="bottom-center" />
+        </MachineStoreProvider>
       </body>
     </html>
   )
