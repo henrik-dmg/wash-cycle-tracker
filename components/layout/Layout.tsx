@@ -21,8 +21,11 @@ const Layout = ({ children, path }: Props) => {
 
   return (
     <>
-      <NavigationBar path={path} />
-      {children}
+      <div className="gradient-mesh" aria-hidden="true" />
+      <div className="min-h-screen">
+        <NavigationBar path={path} />
+        {children}
+      </div>
     </>
   )
 }

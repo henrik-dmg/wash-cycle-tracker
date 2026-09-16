@@ -1,10 +1,9 @@
-import styles from './machinecomponent.module.css'
 import { highlightableItem } from '../../lib/style.utilities'
-import { Action, Machine } from '../../lib/generated/prisma/client'
+import { Action } from '../../lib/generated/prisma/client'
 import { FunctionComponent, useState } from 'react'
-import './machinecomponent.module.css'
 import toast from 'react-hot-toast'
 import { MachineWithActions } from '../../lib/machine.service'
+import { ArrowPathIcon, ClipboardDocumentListIcon, SparklesIcon } from '@heroicons/react/24/outline'
 
 interface Props {
   machine: MachineWithActions
@@ -14,8 +13,6 @@ const MachineComponent: FunctionComponent<Props> = (props) => {
   const [actions, setActions] = useState(props.machine.actions ?? [])
 
   async function logAction(actionType: string) {
-    console.log('Wash cycle was clicked')
-
     // API endpoint where we send form data.
     const endpoint = `/api/machines/${props.machine.id}/${actionType}`
 
@@ -41,60 +38,96 @@ const MachineComponent: FunctionComponent<Props> = (props) => {
       const action: Action = await response.json()
       setActions(actions.concat([action]))
       toast.success(`Successfully logged ${actionType} cycle`)
-      console.log(actions)
     } catch (error) {
       toast.error('Something went wrong')
       console.error(error)
     }
   }
 
-  return (
-    <div key={props.machine.id}>
-      <h2 className="text-3xl font-bold">{props.machine.name}</h2>
-      <h4>{props.machine.id}</h4>
-      <p>{props.machine.createdAt.toString()}</p>
+  const lastAction = actions[actions.length - 1]
 
-      <div className="flex flex-row-reverse flex-wrap-reverse gap-2 object-none object-right">
-        <button className={styles.washcycleButton} onClick={() => logAction('wash')}>
-          Log wash cycle
-        </button>
-        <button className={styles.cleancycleButton} onClick={() => logAction('clean')}>
-          Log clean cycle
-        </button>
+  return (
+    <div key={props.machine.id} className="py-10">
+      <div className="glass-card p-6 sm:p-8">
+        <div className="flex flex-wrap items-start justify-between gap-6">
+          <div>
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">{props.machine.name}</h1>
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              ID {props.machine.id} · Added {new Date(props.machine.createdAt).toLocaleDateString()}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="stat-chip">
+                <ClipboardDocumentListIcon className="h-3.5 w-3.5" />
+                {actions.length} cycle{actions.length === 1 ? '' : 's'} logged
+              </span>
+              {lastAction && (
+                <span className="stat-chip">Last: {lastAction.actionType} on {new Date(lastAction.date).toLocaleDateString()}</span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <button
+              className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-600"
+              onClick={() => logAction('wash')}
+            >
+              <ArrowPathIcon className="h-4 w-4" />
+              Log wash cycle
+            </button>
+            <button
+              className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-600"
+              onClick={() => logAction('clean')}
+            >
+              <SparklesIcon className="h-4 w-4" />
+              Log clean cycle
+            </button>
+          </div>
+        </div>
       </div>
 
-      {actions && (
-        <div className="overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      {actions.length > 0 && (
+        <div className="glass-card mt-6 overflow-x-auto p-2">
+          <table className="w-full table-fixed text-left text-sm text-zinc-600 dark:text-zinc-300">
+            <thead className="text-xs uppercase text-zinc-500 dark:text-zinc-400">
               <tr>
-                <th scope="col" className="py-3 px-6">
+                <th scope="col" className="px-4 py-3">
                   Action
                 </th>
-                <th scope="col" className="py-3 px-6">
+                <th scope="col" className="px-4 py-3">
                   Logged by
                 </th>
-                <th scope="col" className="py-3 px-6">
+                <th scope="col" className="px-4 py-3">
                   Date
                 </th>
-                <th scope="col" className="py-3 px-6">
-                  Action
-                </th>
+                <th scope="col" className="px-4 py-3" />
               </tr>
             </thead>
-            <tbody className="w-full">
-              {actions.map((action, index) => (
-                <tr className="bg-white dark:bg-gray-900 border-b dark:border-gray-700" key={action.id}>
-                  <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {action.actionType}
-                  </th>
-                  <td className="py-4 px-6">{action.userId}</td>
-                  <td className="py-4 px-6">{action.date.toString()}</td>
-                  <td className="py-4 px-6">
-                    <button className="font-medium text-red-600 dark:text-red-700 hover:underline">Delete</button>
-                  </td>
-                </tr>
-              ))}
+            <tbody>
+              {actions
+                .slice()
+                .reverse()
+                .map((action) => (
+                  <tr key={action.id} className="border-t border-zinc-200/60 dark:border-zinc-700/60">
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+                          action.actionType === 'wash'
+                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300'
+                            : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300'
+                        }`}
+                      >
+                        {action.actionType}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 font-medium text-zinc-900 dark:text-white">{action.userId}</td>
+                    <td className="px-4 py-3">{new Date(action.date).toLocaleString()}</td>
+                    <td className="px-4 py-3 text-right">
+                      <button className={highlightableItem('rounded px-2 py-1 font-medium text-red-600 dark:text-red-400')}>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
