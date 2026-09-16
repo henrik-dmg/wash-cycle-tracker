@@ -1,13 +1,31 @@
 import Link from 'next/link'
 import { ArrowRightIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline'
 import ComposeForm from './ComposeForm'
+import { SITE_URL } from '../../lib/site-url'
 
 const GITHUB_URL = 'https://github.com/henrik-dmg/wash-cycle-tracker'
 const RENDER_DEPLOY_URL = `https://render.com/deploy?repo=${GITHUB_URL}`
 
+// Structured data for a rich search result. See https://schema.org/SoftwareApplication.
+const STRUCTURED_DATA = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Wash Cycle Tracker',
+  url: SITE_URL,
+  description: 'Log the washes of your washing machines and see the washes since the latest cleaning. Self-hostable with Docker Compose.',
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+}
+
 export default function LandingPage() {
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }} />
       <section className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-4 py-24 text-center">
         <span className="stat-chip">Self-hosted wash tracker</span>
         <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-5xl">

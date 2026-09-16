@@ -6,10 +6,19 @@ import NavigationBar from '../components/navigationbar/NavigationBar'
 import { MachineStoreProvider } from '../lib/store/context'
 import { deploymentMode } from '../lib/deployment-mode'
 import { signInEnabled } from '../lib/sign-in'
+import { SITE_URL } from '../lib/site-url'
 
+// The default for every route is "do not index". A deployment is one person's own tracker, with
+// no public content to find, so it must stay out of search results. Only the marketing pages
+// (app/page.tsx in marketing mode, app/demo) opt back in with their own metadata.
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'Wash Cycle Tracker',
   description: 'Log the washes of your washing machines and see the washes since the latest cleaning. Self-hostable with Docker Compose.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

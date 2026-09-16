@@ -2,9 +2,10 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { hasValidSession, signInEnabled } from './lib/sign-in'
 
 // Pages that stay reachable without a session. API routes check the session in their own guard
-// (see lib/api-guard.ts) and answer 401 instead of a redirect.
+// (see lib/api-guard.ts) and answer 401 instead of a redirect. robots.txt must stay reachable too,
+// so a crawler gets the disallow rule (see app/robots.ts) instead of a redirect to /login.
 function isPublicPath(pathname: string): boolean {
-  return pathname === '/login' || pathname === '/help' || pathname.startsWith('/help/') || pathname.startsWith('/api/')
+  return pathname === '/login' || pathname === '/help' || pathname.startsWith('/help/') || pathname.startsWith('/api/') || pathname === '/robots.txt'
 }
 
 // Redirects a page request without a valid session to the login page when APP_PASSWORD is set.
