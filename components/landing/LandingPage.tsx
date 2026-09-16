@@ -1,8 +1,9 @@
 import Link from 'next/link'
-import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { ArrowRightIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline'
 import ComposeForm from './ComposeForm'
 
 const GITHUB_URL = 'https://github.com/henrik-dmg/wash-cycle-tracker'
+const RENDER_DEPLOY_URL = `https://render.com/deploy?repo=${GITHUB_URL}`
 
 export default function LandingPage() {
   return (
@@ -24,6 +25,15 @@ export default function LandingPage() {
             Try the demo
             <ArrowRightIcon className="h-4 w-4" />
           </Link>
+          <a
+            href={RENDER_DEPLOY_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-zinc-300 px-6 py-3 font-semibold text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
+          >
+            Deploy to Render
+            <CloudArrowUpIcon className="h-4 w-4" />
+          </a>
           <a
             href={GITHUB_URL}
             target="_blank"
