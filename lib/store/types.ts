@@ -11,6 +11,7 @@ export interface MachineStore {
   createMachine(name: string): Promise<MachineListItem>
   renameMachine(machineId: number, name: string): Promise<MachineListItem>
   deleteMachine(machineId: number): Promise<void>
-  logEntry(machineId: number, kind: EntryKind): Promise<EntryItem>
+  // occurredAt is an ISO 8601 string. Uses the current time when it is not given.
+  logEntry(machineId: number, kind: EntryKind, occurredAt?: string): Promise<EntryItem>
   deleteEntry(machineId: number, entryId: number): Promise<void>
 }

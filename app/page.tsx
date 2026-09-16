@@ -61,6 +61,14 @@ export default function HomePage() {
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{machine.name}</h2>
                 <ArrowRightIcon className="h-4 w-4 flex-shrink-0 text-zinc-400 transition-transform group-hover:translate-x-1 group-hover:text-indigo-500" />
               </div>
+              <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+                {machine.washesSinceCleaning} {machine.washesSinceCleaning === 1 ? 'wash' : 'washes'} since cleaning
+              </p>
+              {machine.latestEntryAt && (
+                <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500" suppressHydrationWarning>
+                  Latest entry: {new Date(machine.latestEntryAt).toLocaleString()}
+                </p>
+              )}
             </Link>
           ))}
         </div>

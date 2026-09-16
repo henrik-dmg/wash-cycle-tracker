@@ -24,8 +24,8 @@ export function createApiMachineStore(): MachineStore {
     deleteMachine(machineId) {
       return sendJson<void>(`/api/machines/${machineId}`, 'DELETE')
     },
-    logEntry(machineId, kind) {
-      return sendJson<EntryItem>(`/api/machines/${machineId}/entries`, 'POST', { kind })
+    logEntry(machineId, kind, occurredAt) {
+      return sendJson<EntryItem>(`/api/machines/${machineId}/entries`, 'POST', occurredAt ? { kind, occurredAt } : { kind })
     },
     deleteEntry(machineId, entryId) {
       return sendJson<void>(`/api/machines/${machineId}/entries/${entryId}`, 'DELETE')
