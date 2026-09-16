@@ -5,7 +5,7 @@ import { createMachine, MachineInputError, validateMachineInput } from '../../..
 export const POST = withSessionEnsured(async (request, _context, session) => {
   try {
     const input = validateMachineInput(await request.json())
-    const machine = await createMachine(input, session.user)
+    const machine = await createMachine(input, session.user.id)
     return NextResponse.json(machine)
   } catch (error) {
     if (error instanceof MachineInputError) {

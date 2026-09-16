@@ -25,7 +25,7 @@ export const GET = withSessionEnsured<RouteContext<'/api/machines/[id]/statement
   }
 
   try {
-    const machine = await fetchMachineDetails(session.user.sub, machineId)
+    const machine = await fetchMachineDetails(session.user.id, machineId)
     if (!machine) {
       return NextResponse.json({ message: 'Machine not found' }, { status: 404 })
     }

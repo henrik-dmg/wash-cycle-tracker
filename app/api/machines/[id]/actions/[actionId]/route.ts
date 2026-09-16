@@ -11,7 +11,7 @@ export const DELETE = withSessionEnsured<RouteContext<'/api/machines/[id]/action
   }
 
   try {
-    const deleted = await deleteAction(parsedActionId, machineId, session.user.sub)
+    const deleted = await deleteAction(parsedActionId, machineId, session.user.id)
     if (!deleted) {
       return NextResponse.json({ message: 'Entry not found' }, { status: 404 })
     }

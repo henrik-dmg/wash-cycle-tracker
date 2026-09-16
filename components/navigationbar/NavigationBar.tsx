@@ -3,18 +3,29 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { useUser } from '@auth0/nextjs-auth0'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import styles from './navigationbar.module.css'
 import { highlightableItem } from '../../lib/style.utilities'
+import { authClient } from '../../lib/auth-client'
 
 const NavigationBar = () => {
   const pathname = usePathname()
   const [active, setActive] = useState(false)
-  const { user } = useUser()
+  const { data: session } = authClient.useSession()
+  const user = session?.user
 
   const handleClick = () => {
     setActive(!active)
+  }
+
+  const handleLogin = () => {
+    handleClick()
+    authClient.signIn.social({ provider: 'oidc', callbackURL: pathname })
+  }
+
+  const handleLogout = () => {
+    handleClick()
+    authClient.signOut({ fetchOptions: { onSuccess: () => window.location.assign(window.location.origin) } })
   }
 
   const isCurrent = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href))
@@ -51,9 +62,9 @@ const NavigationBar = () => {
               Pricing
             </Link>
             {!user && (
-              <a href="/auth/login" className={`${styles.navbarItem} ${styles.navbarItemCta}`} onClick={handleClick}>
+              <button type="button" className={`${styles.navbarItem} ${styles.navbarItemCta}`} onClick={handleLogin}>
                 Log in
-              </a>
+              </button>
             )}
             {user && (
               <>
@@ -64,9 +75,9 @@ const NavigationBar = () => {
                 >
                   Account
                 </Link>
-                <a href="/auth/logout" className={styles.navbarItem} onClick={handleClick}>
+                <button type="button" className={styles.navbarItem} onClick={handleLogout}>
                   Log out
-                </a>
+                </button>
               </>
             )}
           </div>

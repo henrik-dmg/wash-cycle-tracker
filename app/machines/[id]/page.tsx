@@ -8,14 +8,14 @@ export default async function MachinePage({ params }: PageProps<'/machines/[id]'
   const { id: rawId } = await params
   const { user } = await requireSession(`/machines/${rawId}`)
   const id = parseInt(rawId)
-  const machine = id ? await fetchMachineDetails(user.sub, id) : null
+  const machine = id ? await fetchMachineDetails(user.id, id) : null
   if (!machine) {
     redirect('/machines')
   }
 
   return (
     <main className={styles.defaultContainer}>
-      <MachineComponent machine={machine} currentUserId={user.sub} />
+      <MachineComponent machine={machine} currentUserId={user.id} />
     </main>
   )
 }

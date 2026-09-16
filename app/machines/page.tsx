@@ -7,7 +7,7 @@ import styles from '../../styles/Default.module.css'
 
 export default async function MachinesPage() {
   const { user } = await requireSession('/machines')
-  const machines = await fetchMachinesForUser(user.sub)
+  const machines = await fetchMachinesForUser(user.id)
 
   return (
     <main className={styles.defaultContainer}>

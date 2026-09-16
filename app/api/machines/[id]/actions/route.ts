@@ -14,7 +14,7 @@ export const POST = withSessionEnsured<RouteContext<'/api/machines/[id]/actions'
     if (!machineId || !isActionType(actionType)) {
       return NextResponse.json({ message: 'Invalid machine ID or action type' }, { status: 400 })
     }
-    const action = await logAction(actionType, machineId, session.user)
+    const action = await logAction(actionType, machineId, session.user.id)
     if (!action) {
       return NextResponse.json({ message: 'Machine not found' }, { status: 404 })
     }

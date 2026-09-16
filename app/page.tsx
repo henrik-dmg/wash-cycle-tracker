@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { auth0 } from '../lib/auth0'
+import { headers } from 'next/headers'
+import { auth } from '../lib/auth'
 import {
   ArrowDownTrayIcon,
   ArrowRightIcon,
@@ -64,7 +65,7 @@ const plans = [
       'Unlimited machines and members',
       'Your data stays on your server',
       'One SQLite file to back up',
-      'Bring your own Auth0 tenant',
+      'Bring your own identity provider',
     ],
     cta: 'Read the setup',
     href: '#self-host',
@@ -85,7 +86,7 @@ const plans = [
 const trustBadges = [
   { icon: ServerStackIcon, label: 'Data on your own server' },
   { icon: CircleStackIcon, label: 'One SQLite file to back up' },
-  { icon: ShieldCheckIcon, label: 'Auth0 sign-in' },
+  { icon: ShieldCheckIcon, label: 'Bring your own identity provider' },
   { icon: ArrowDownTrayIcon, label: 'CSV export' },
 ]
 
@@ -98,17 +99,17 @@ const sampleSplit = [
 const selfHostSnippet = `git clone <repository-url> washing-machine-server
 cd washing-machine-server
 
-# Add the Auth0 settings to .env:
-# AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET,
-# AUTH0_SECRET, APP_BASE_URL
+# Point the app at your own OpenID Connect provider in .env:
+# BETTER_AUTH_SECRET, BETTER_AUTH_URL,
+# OIDC_ISSUER, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET
 echo 'DATABASE_URL="file:./data/washing-machine.db"' >> .env
 
 docker compose up -d`
 
 export default async function HomePage() {
-  const session = await auth0.getSession()
+  const session = await auth.api.getSession({ headers: await headers() })
   const user = session?.user
-  const primaryHref = user ? '/machines' : '/auth/login'
+  const primaryHref = user ? '/machines' : '/login'
   const primaryLabel = user ? 'Go to your machines' : 'Start splitting'
 
   return (
@@ -246,7 +247,7 @@ export default async function HomePage() {
               {[
                 'Docker Compose file included',
                 'The database schema updates when the container starts',
-                'Sign-in through your own Auth0 tenant',
+                'Sign-in through your own identity provider',
               ].map((item) => (
                 <li key={item} className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-300">
                   <CheckIcon className="h-4 w-4 flex-shrink-0 text-indigo-500" />

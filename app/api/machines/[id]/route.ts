@@ -11,7 +11,7 @@ export const PATCH = withSessionEnsured<RouteContext<'/api/machines/[id]'>>(asyn
 
   try {
     const input = validateMachineInput(await request.json())
-    const machine = await updateMachine(machineId, input, session.user.sub)
+    const machine = await updateMachine(machineId, input, session.user.id)
     if (!machine) {
       return NextResponse.json({ message: 'Machine not found' }, { status: 404 })
     }

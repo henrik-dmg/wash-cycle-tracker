@@ -8,7 +8,7 @@ import styles from '../../../styles/Default.module.css'
 export default async function JoinPage({ params }: PageProps<'/join/[code]'>) {
   const { code } = await params
   const { user } = await requireSession(`/join/${encodeURIComponent(code)}`)
-  const machineId = await joinMachine(code, user)
+  const machineId = await joinMachine(code, user.id)
   if (machineId) {
     redirect(`/machines/${machineId}`)
   }
