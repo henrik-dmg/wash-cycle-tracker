@@ -6,7 +6,7 @@ import NavigationBar from '../components/navigationbar/NavigationBar'
 
 export const metadata: Metadata = {
   title: 'Washing Machine Server',
-  description: 'Split the cost of a shared washing machine by usage. Self-hostable with Docker Compose.',
+  description: 'Log the washes of your washing machines and see the washes since the latest cleaning. Self-hostable with Docker Compose.',
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

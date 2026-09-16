@@ -1,34 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Washing Machine Server
 
-## Getting Started
+A self-hosted app for one person. It records the washes and cleanings of your washing machines, and shows the washes since the latest cleaning.
 
-First, run the development server:
+## Development
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+1. Install the dependencies with `pnpm install`.
+2. Add `DATABASE_URL="file:./data/washing-machine.db"` to `.env`.
+3. Apply the migrations with `pnpm exec prisma migrate deploy`.
+4. Generate the Prisma client with `pnpm exec prisma generate`.
+5. Start the development server with `pnpm dev`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`pnpm seed` replaces all data with sample machines and entries.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Docker
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+`docker compose up -d` builds the image from source and starts the app on port 3000. The container applies the migrations when it starts. The SQLite database is in the `db-data` volume.

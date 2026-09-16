@@ -1,46 +1,42 @@
 import 'dotenv/config'
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 import { PrismaClient } from '../lib/generated/prisma/client'
-import { machines, actions, users, userMachineRelationships } from './data.js'
 
 const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL as string })
 const prisma = new PrismaClient({ adapter })
 
+const DAY = 24 * 60 * 60 * 1000
+
+// Returns a date the given number of days before now.
+function daysAgo(days: number): Date {
+  return new Date(Date.now() - days * DAY)
+}
+
 const load = async () => {
   try {
-    await prisma.action.deleteMany()
-    console.log('Deleted records in actions table')
-    await prisma.usersOnMachines.deleteMany()
-    console.log('Deleted records in usersonmachines table')
+    // The delete of a machine also deletes its entries.
     await prisma.machine.deleteMany()
-    console.log('Deleted records in machines table')
-    await prisma.user.deleteMany()
-    console.log('Deleted records in users table')
+    console.log('Deleted all machines and entries')
 
-    await prisma.$executeRaw`DELETE FROM sqlite_sequence WHERE name = 'Action'`
-    console.log('reset action auto increment to 1')
-    await prisma.$executeRaw`DELETE FROM sqlite_sequence WHERE name = 'Machine'`
-    console.log('reset machine auto increment to 1')
-
-    await prisma.machine.createMany({
-      data: machines,
+    await prisma.machine.create({
+      data: {
+        name: 'Home',
+        cleaningInterval: 10,
+        entries: {
+          create: [
+            { kind: 'cleaning', occurredAt: daysAgo(20) },
+            ...[18, 15, 12, 9, 6, 3, 1].map((days) => ({ kind: 'wash' as const, occurredAt: daysAgo(days) })),
+          ],
+        },
+      },
     })
-    console.log('Added machines data')
-
-    await prisma.user.createMany({
-      data: users,
+    await prisma.machine.create({
+      data: {
+        name: 'Holiday flat',
+        entries: { create: [{ kind: 'wash', occurredAt: daysAgo(40) }] },
+      },
     })
-    console.log('Added users data')
-
-    await prisma.action.createMany({
-      data: actions,
-    })
-    console.log('Added actions data')
-
-    await prisma.usersOnMachines.createMany({
-      data: userMachineRelationships,
-    })
-    console.log('Added machine-user-relationship data')
+    console.log('Added sample machines and entries')
   } catch (e) {
     console.error(e)
     process.exit(1)

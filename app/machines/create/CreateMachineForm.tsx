@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import styles from '../../../styles/Default.module.css'
-import type { Machine } from '../../../lib/generated/prisma/client'
+import type { MachineListItem } from '../../../lib/machine.service'
 import { FormEvent } from 'react'
 import { PlusIcon } from '@heroicons/react/24/outline'
 import MachineFormFields, { readMachineForm } from '../../../components/machine/MachineFormFields'
@@ -13,7 +13,7 @@ export default function CreateMachineForm() {
   const router = useRouter()
 
   const createNewMachineAndNavigate = async (form: HTMLFormElement) => {
-    const machine = await sendJson<Machine>('/api/machines/create', 'POST', readMachineForm(form))
+    const machine = await sendJson<MachineListItem>('/api/machines/create', 'POST', readMachineForm(form))
     router.push(`/machines/${machine.id}`)
   }
 
@@ -30,9 +30,6 @@ export default function CreateMachineForm() {
     <main className={styles.defaultContainer}>
       <div className="mx-auto max-w-lg py-16">
         <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Add a machine</h1>
-        <p className="mt-1 text-zinc-600 dark:text-zinc-300">
-          Add the shared machine and its price per wash. Then invite your flatmates from the machine page.
-        </p>
 
         <form onSubmit={handleSubmit} className="glass-card mt-8 space-y-5 p-6 sm:p-8">
           <MachineFormFields />

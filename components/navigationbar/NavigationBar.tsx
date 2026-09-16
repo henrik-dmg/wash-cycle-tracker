@@ -6,29 +6,16 @@ import { useState } from 'react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import styles from './navigationbar.module.css'
 import { highlightableItem } from '../../lib/style.utilities'
-import { authClient } from '../../lib/auth-client'
 
 const NavigationBar = () => {
   const pathname = usePathname()
   const [active, setActive] = useState(false)
-  const { data: session } = authClient.useSession()
-  const user = session?.user
 
   const handleClick = () => {
     setActive(!active)
   }
 
-  const handleLogin = () => {
-    handleClick()
-    authClient.signIn.social({ provider: 'oidc', callbackURL: pathname })
-  }
-
-  const handleLogout = () => {
-    handleClick()
-    authClient.signOut({ fetchOptions: { onSuccess: () => window.location.assign(window.location.origin) } })
-  }
-
-  const isCurrent = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href))
+  const isMachinesCurrent = pathname === '/' || pathname.startsWith('/machines')
 
   return (
     <nav className={styles.navbar}>
@@ -44,42 +31,9 @@ const NavigationBar = () => {
         </button>
         <div className={`${active ? '' : 'hidden'} w-full lg:inline-flex lg:flex-grow lg:w-auto`}>
           <div className="lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start flex flex-col lg:h-auto gap-1 py-2 lg:py-0">
-            <Link
-              href="/machines"
-              className={`${styles.navbarItem} ${isCurrent('/machines') ? styles.navbarItemActive : ''}`}
-              onClick={handleClick}
-            >
+            <Link href="/" className={`${styles.navbarItem} ${isMachinesCurrent ? styles.navbarItemActive : ''}`} onClick={handleClick}>
               Machines
             </Link>
-            <Link href="/#self-host" className={styles.navbarItem} onClick={handleClick}>
-              Self-host
-            </Link>
-            <Link
-              href="/#pricing"
-              className={`${styles.navbarItem} ${isCurrent('/pricing') ? styles.navbarItemActive : ''}`}
-              onClick={handleClick}
-            >
-              Pricing
-            </Link>
-            {!user && (
-              <button type="button" className={`${styles.navbarItem} ${styles.navbarItemCta}`} onClick={handleLogin}>
-                Log in
-              </button>
-            )}
-            {user && (
-              <>
-                <Link
-                  href="/account"
-                  className={`${styles.navbarItem} ${isCurrent('/account') ? styles.navbarItemActive : ''}`}
-                  onClick={handleClick}
-                >
-                  Account
-                </Link>
-                <button type="button" className={styles.navbarItem} onClick={handleLogout}>
-                  Log out
-                </button>
-              </>
-            )}
           </div>
         </div>
       </div>
