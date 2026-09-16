@@ -19,10 +19,14 @@ const users = [
   {
     id: 'someUserID',
     name: 'Henrik Panhans',
+    email: 'henrik@example.com',
+    emailVerified: true,
   },
   {
     id: 'someOtherUserID',
     name: 'Leona Schulz-Schaeffer',
+    email: 'leona@example.com',
+    emailVerified: true,
   },
 ]
 

@@ -21,11 +21,21 @@ model Machine {
   actions     Action[]
 }
 
+// Owned by Better Auth. Filled in on first sign-in through the configured identity provider.
 model User {
   id              String            @id
   name            String
-  UsersOnMachines UsersOnMachines[]
+  email           String            @unique
+  emailVerified   Boolean           @default(false)
+  image           String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  usersOnMachines UsersOnMachines[]
   actions         Action[]
+  sessions        Session[]
+  accounts        Account[]
+
+  @@map("user")
 }
 
 model Action {
@@ -49,4 +59,53 @@ model UsersOnMachines {
   assignedBy String
 
   @@id([machineId, userId])
+}
+
+// Better Auth core tables below. Managed by `npx @better-auth/cli generate`, not by hand.
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }
