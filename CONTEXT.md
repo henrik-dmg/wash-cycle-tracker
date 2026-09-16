@@ -1,4 +1,4 @@
-# Washing Machine Server
+# Wash Cycle Tracker
 
 A self-hosted app for one person. It records when each of that person's washing machines runs a wash cycle or a cleaning cycle.
 

@@ -1,11 +1,11 @@
-# Washing Machine Server
+# Wash Cycle Tracker
 
 A self-hosted app for one person. It records the washes and cleanings of your washing machines, and shows the washes since the latest cleaning.
 
 ## Development
 
 1. Install the dependencies with `pnpm install`.
-2. Add `DATABASE_URL="file:./data/washing-machine.db"` to `.env`.
+2. Add `DATABASE_URL="file:./data/wash-cycle-tracker.db"` to `.env`.
 3. Apply the migrations with `pnpm exec prisma migrate deploy`.
 4. Generate the Prisma client with `pnpm exec prisma generate`.
 5. Start the development server with `pnpm dev`.

@@ -8,7 +8,7 @@ import HelpPage from '../../components/help/HelpPage'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Help · Washing Machine Server',
+  title: 'Help · Wash Cycle Tracker',
 }
 
 export default async function HelpRoute() {

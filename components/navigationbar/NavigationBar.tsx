@@ -9,7 +9,7 @@ import { highlightableItem } from '../../lib/style.utilities'
 import type { DeploymentMode } from '../../lib/deployment-mode'
 import { sendJson } from '../../lib/fetch.utilities'
 
-const GITHUB_URL = 'https://github.com/henrik-dmg/washing-machine-server'
+const GITHUB_URL = 'https://github.com/henrik-dmg/wash-cycle-tracker'
 
 const NavigationBar = ({ mode, signInEnabled }: { mode: DeploymentMode; signInEnabled: boolean }) => {
   const pathname = usePathname()
@@ -35,7 +35,7 @@ const NavigationBar = ({ mode, signInEnabled }: { mode: DeploymentMode; signInEn
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-sm font-bold text-white">
             W
           </span>
-          <span className="text-lg font-bold tracking-tight text-zinc-900 dark:text-white">WMS</span>
+          <span className="text-lg font-bold tracking-tight text-zinc-900 dark:text-white">Wash Cycle Tracker</span>
         </Link>
         <button className={highlightableItem(styles.navbarHamburgerButton)} onClick={handleClick}>
           {active ? <XMarkIcon className="h-6 w-6" /> : <Bars3Icon className="h-6 w-6" />}

@@ -56,7 +56,7 @@ describe('with APP_PASSWORD', () => {
 
   test('an API call with a forged cookie gets 401', async () => {
     const forgedToken = `${Date.now() + 1_000_000}.not-a-real-signature`
-    const response = await createInProcessFetch()('/api/machines', { headers: { cookie: `wms_session=${forgedToken}` } })
+    const response = await createInProcessFetch()('/api/machines', { headers: { cookie: `wct_session=${forgedToken}` } })
     expect(response.status).toBe(401)
   })
 
@@ -75,7 +75,7 @@ describe('with APP_PASSWORD', () => {
     expect(response.status).toBe(204)
 
     const [cookie] = response.headers.getSetCookie()
-    expect(cookie).toMatch(/^wms_session=\d+\.[\w-]+;/)
+    expect(cookie).toMatch(/^wct_session=\d+\.[\w-]+;/)
     expect(cookie).toMatch(/HttpOnly/i)
     expect(cookie).toMatch(/SameSite=Lax/i)
     expect(cookie).toMatch(/Max-Age=2592000/i)

@@ -19,7 +19,7 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-ARG DATABASE_URL="file:./data/washing-machine.db"
+ARG DATABASE_URL="file:./data/wash-cycle-tracker.db"
 ENV DATABASE_URL=$DATABASE_URL
 RUN pnpm exec prisma generate --config prisma.config.ts
 RUN pnpm build
@@ -29,7 +29,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 # A default that points at the data volume, so a plain `docker run` of the published image works.
 # DEPLOYMENT_MODE stays unset, so the image defaults to the deployment mode.
-ENV DATABASE_URL="file:/app/data/washing-machine.db"
+ENV DATABASE_URL="file:/app/data/wash-cycle-tracker.db"
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 --ingroup nodejs --home /home/nextjs --shell /bin/sh nextjs \
   && mkdir -p /home/nextjs /app/data \

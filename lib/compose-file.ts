@@ -3,13 +3,13 @@
 
 // The published image on the major version tag, so `docker compose pull` gets minor and patch
 // updates but never a breaking release.
-export const COMPOSE_IMAGE = 'ghcr.io/henrik-dmg/washing-machine-server:2'
+export const COMPOSE_IMAGE = 'ghcr.io/henrik-dmg/wash-cycle-tracker:2'
 
 // The port and the data directory inside the container. They match the Dockerfile.
 export const CONTAINER_PORT = 3000
 export const CONTAINER_DATA_DIRECTORY = '/app/data'
 // Relative to the working directory of the container (`/app`), so the file is in the volume.
-export const COMPOSE_DATABASE_URL = 'file:./data/washing-machine.db'
+export const COMPOSE_DATABASE_URL = 'file:./data/wash-cycle-tracker.db'
 
 export const DEFAULT_HOST_PORT = 3000
 

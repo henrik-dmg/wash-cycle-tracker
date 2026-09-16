@@ -1,7 +1,7 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
 import { deploymentMode, type DeploymentMode } from './deployment-mode'
 
-export const SESSION_COOKIE_NAME = 'wms_session'
+export const SESSION_COOKIE_NAME = 'wct_session'
 export const SESSION_MAX_AGE_SECONDS = 30 * 24 * 60 * 60
 
 export interface SignInConfig {

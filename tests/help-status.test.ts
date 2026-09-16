@@ -35,11 +35,11 @@ describe('appVersion', () => {
 
 describe('databaseDirectoryFromUrl', () => {
   test('resolves a relative file URL against the working directory', () => {
-    expect(databaseDirectoryFromUrl('file:./data/washing-machine.db', '/app')).toBe('/app/data')
+    expect(databaseDirectoryFromUrl('file:./data/wash-cycle-tracker.db', '/app')).toBe('/app/data')
   })
 
   test('keeps an absolute file URL', () => {
-    expect(databaseDirectoryFromUrl('file:/var/lib/wms/db.sqlite', '/app')).toBe('/var/lib/wms')
+    expect(databaseDirectoryFromUrl('file:/var/lib/wash-cycle-tracker/db.sqlite', '/app')).toBe('/var/lib/wash-cycle-tracker')
   })
 
   test('returns null for a missing, empty or non-file URL', () => {

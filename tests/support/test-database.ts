@@ -8,7 +8,7 @@ import { afterAll, beforeAll } from 'vitest'
 // Creates a temporary SQLite file with the migrations applied before the tests of the calling file,
 // and deletes it after them.
 export function setupTestDatabase() {
-  const dbPath = join(tmpdir(), `washing-machine-test-${randomUUID()}.db`)
+  const dbPath = join(tmpdir(), `wash-cycle-tracker-test-${randomUUID()}.db`)
 
   beforeAll(() => {
     process.env.DATABASE_URL = `file:${dbPath}`

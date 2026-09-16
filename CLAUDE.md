@@ -4,7 +4,7 @@
 
 ### Issue tracker
 
-Issues, specs and wayfinder maps live in GitHub Issues for henrik-dmg/washing-machine-server, through the `gh` CLI. See `docs/agents/issue-tracker.md`.
+Issues, specs and wayfinder maps live in GitHub Issues for henrik-dmg/wash-cycle-tracker, through the `gh` CLI. See `docs/agents/issue-tracker.md`.
 
 ### Domain docs
 

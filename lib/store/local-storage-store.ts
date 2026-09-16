@@ -4,7 +4,7 @@ import type { EntryItem, EntryKind, MachineDetails, MachineListItem, MachineStor
 
 // The one localStorage key of the demo. Change the version when the stored shape changes, so an
 // old value is replaced with fresh sample data instead of being misread.
-export const DEMO_STORAGE_KEY = 'washing-machine-demo:v1'
+export const DEMO_STORAGE_KEY = 'wash-cycle-tracker-demo:v1'
 
 const STATE_VERSION = 1
 const DAY = 24 * 60 * 60 * 1000

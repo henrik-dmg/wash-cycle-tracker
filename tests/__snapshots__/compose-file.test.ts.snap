@@ -3,12 +3,12 @@
 exports[`buildComposeFile snapshots > builds the file with a custom port 1`] = `
 "services:
   app:
-    image: "ghcr.io/henrik-dmg/washing-machine-server:2"
+    image: "ghcr.io/henrik-dmg/wash-cycle-tracker:2"
     restart: unless-stopped
     ports:
       - "8080:3000"
     environment:
-      DATABASE_URL: "file:./data/washing-machine.db"
+      DATABASE_URL: "file:./data/wash-cycle-tracker.db"
     volumes:
       - "db-data:/app/data"
 
@@ -20,12 +20,12 @@ volumes:
 exports[`buildComposeFile snapshots > builds the file with a password 1`] = `
 "services:
   app:
-    image: "ghcr.io/henrik-dmg/washing-machine-server:2"
+    image: "ghcr.io/henrik-dmg/wash-cycle-tracker:2"
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: "file:./data/washing-machine.db"
+      DATABASE_URL: "file:./data/wash-cycle-tracker.db"
       APP_PASSWORD: "hunter2"
       SESSION_SECRET: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     volumes:
@@ -39,12 +39,12 @@ volumes:
 exports[`buildComposeFile snapshots > builds the file without a password 1`] = `
 "services:
   app:
-    image: "ghcr.io/henrik-dmg/washing-machine-server:2"
+    image: "ghcr.io/henrik-dmg/wash-cycle-tracker:2"
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: "file:./data/washing-machine.db"
+      DATABASE_URL: "file:./data/wash-cycle-tracker.db"
     volumes:
       - "db-data:/app/data"
 

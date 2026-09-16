@@ -8,7 +8,7 @@ import { deploymentMode } from '../lib/deployment-mode'
 import { signInEnabled } from '../lib/sign-in'
 
 export const metadata: Metadata = {
-  title: 'Washing Machine Server',
+  title: 'Wash Cycle Tracker',
   description: 'Log the washes of your washing machines and see the washes since the latest cleaning. Self-hostable with Docker Compose.',
 }
 

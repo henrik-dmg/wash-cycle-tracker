@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import ComposeForm from './ComposeForm'
 
-const GITHUB_URL = 'https://github.com/henrik-dmg/washing-machine-server'
+const GITHUB_URL = 'https://github.com/henrik-dmg/wash-cycle-tracker'
 
 export default function LandingPage() {
   return (
@@ -13,7 +13,7 @@ export default function LandingPage() {
           Log every wash. Know when it needs cleaning.
         </h1>
         <p className="max-w-2xl text-lg text-zinc-600 dark:text-zinc-300">
-          Washing Machine Server tracks the washes on your machines and shows the washes since the latest cleaning, so
+          Wash Cycle Tracker logs the washes on your machines and shows the washes since the latest cleaning, so
           you always know when it&apos;s due.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4">

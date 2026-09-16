@@ -106,15 +106,15 @@ export default function HelpPage({ status }: { status: HelpStatus }) {
 
         <Section id="backup" title="Back up and restore">
           <p>
-            The data is one SQLite file, <Code>/app/data/washing-machine.db</Code>, in the volume of the container. Stop the container first, so that the file is
+            The data is one SQLite file, <Code>/app/data/wash-cycle-tracker.db</Code>, in the volume of the container. Stop the container first, so that the file is
             consistent. The commands use the service name <Code>app</Code>; use the name from your <Code>docker-compose.yml</Code>.
           </p>
           <p className="font-semibold text-zinc-900 dark:text-white">Back up</p>
-          <Command>{'docker compose stop app\ndocker compose cp app:/app/data/washing-machine.db ./washing-machine.db.backup\ndocker compose start app'}</Command>
+          <Command>{'docker compose stop app\ndocker compose cp app:/app/data/wash-cycle-tracker.db ./wash-cycle-tracker.db.backup\ndocker compose start app'}</Command>
           <p className="font-semibold text-zinc-900 dark:text-white">Restore</p>
           <Command>
             {
-              'docker compose stop app\ndocker compose cp ./washing-machine.db.backup app:/app/data/washing-machine.db\ndocker compose run --rm --no-deps --user root --entrypoint chown app nextjs:nodejs /app/data/washing-machine.db\ndocker compose start app'
+              'docker compose stop app\ndocker compose cp ./wash-cycle-tracker.db.backup app:/app/data/wash-cycle-tracker.db\ndocker compose run --rm --no-deps --user root --entrypoint chown app nextjs:nodejs /app/data/wash-cycle-tracker.db\ndocker compose start app'
             }
           </Command>
           <p>The third restore command gives the file back to the user that runs the app, so that the app can write to it.</p>
