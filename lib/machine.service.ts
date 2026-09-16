@@ -1,33 +1,127 @@
-import { Action, Machine } from './generated/prisma/client'
+import { randomBytes } from 'node:crypto'
+import type { User as SessionUser } from '@auth0/nextjs-auth0/types'
+import { Machine } from './generated/prisma/client'
 import prisma from './prisma'
 import safeJsonStringify from 'safe-json-stringify'
+import { isSupportedCurrency, MAX_COST_PER_WASH } from './money'
+import type { ActionEntry, ActionType, Member } from './statement'
+import { sanitiseUsername } from './usernameSanitisation'
 
-export type MachineWithActions = Machine & {
-  actions: Action[]
+export interface MachineDetails {
+  id: number
+  name: string
+  description: string
+  createdAt: string
+  costPerWash: number
+  currency: string
+  inviteCode: string
+  members: Member[]
+  actions: ActionEntry[]
 }
 
-export async function fetchMachine(userId: string, machineId: number): Promise<MachineWithActions | null> {
-  const userMachineRelationships = await prisma.usersOnMachines.findMany({
-    where: {
-      userId: userId,
-      machineId: machineId,
-    },
+export interface MachineInput {
+  name: string
+  description: string
+  costPerWash: number
+  currency: string
+}
+
+export class MachineInputError extends Error {}
+
+function generateInviteCode(): string {
+  return randomBytes(12).toString('base64url')
+}
+
+function displayName(user: SessionUser): string {
+  return user.name || user.nickname || user.email || sanitiseUsername(user.sub)
+}
+
+// Creates or updates the user row, so that the history and the statement can show a name instead of the Auth0 ID.
+export async function ensureUser(user: SessionUser): Promise<void> {
+  const name = displayName(user)
+  await prisma.user.upsert({
+    where: { id: user.sub },
+    create: { id: user.sub, name },
+    update: { name },
+  })
+}
+
+export async function isMember(userId: string, machineId: number): Promise<boolean> {
+  const relationship = await prisma.usersOnMachines.findUnique({
+    where: { machineId_userId: { machineId, userId } },
+  })
+  return relationship !== null
+}
+
+// Checks and cleans the input for a new or changed machine. Throws a MachineInputError for input that is not valid.
+export function validateMachineInput(body: unknown): MachineInput {
+  const input = (body ?? {}) as Record<string, unknown>
+  const name = typeof input.name === 'string' ? input.name.trim() : ''
+  const description = typeof input.description === 'string' ? input.description.trim() : ''
+  const costPerWash = input.costPerWash
+  const currency = input.currency
+
+  if (!name || name.length > 100) {
+    throw new MachineInputError('The name must have 1 to 100 characters')
+  }
+  if (description.length > 200) {
+    throw new MachineInputError('The description must have 200 characters or fewer')
+  }
+  if (typeof costPerWash !== 'number' || !Number.isInteger(costPerWash) || costPerWash < 0 || costPerWash > MAX_COST_PER_WASH) {
+    throw new MachineInputError('The cost per wash is not valid')
+  }
+  if (typeof currency !== 'string' || !isSupportedCurrency(currency)) {
+    throw new MachineInputError('The currency is not supported')
+  }
+  return { name, description, costPerWash, currency }
+}
+
+export async function fetchMachineDetails(userId: string, machineId: number): Promise<MachineDetails | null> {
+  if (!(await isMember(userId, machineId))) {
+    return null
+  }
+  let machine = await prisma.machine.findUnique({
+    where: { id: machineId },
     include: {
-      machine: {
-        include: {
-          actions: true,
-        },
-      },
+      users: { orderBy: { assignedAt: 'asc' } },
+      actions: { orderBy: { date: 'asc' } },
     },
   })
-  if (userMachineRelationships.length > 1) {
-    console.error('A user should only have a one-to-one relationship to a machine')
+  if (!machine) {
     return null
   }
-  if (userMachineRelationships.length === 0) {
-    return null
+  // Machines from before the invite feature have no code. Give them a code the first time a member opens them.
+  if (!machine.inviteCode) {
+    const { inviteCode } = await prisma.machine.update({
+      where: { id: machineId },
+      data: { inviteCode: generateInviteCode() },
+    })
+    machine = { ...machine, inviteCode }
   }
-  return safeEncodeMachineWithActions(userMachineRelationships[0].machine)
+
+  // Load the names separately: old rows can have a user ID with no user row.
+  const userIds = [...new Set([...machine.users.map((user) => user.userId), ...machine.actions.map((action) => action.userId)])]
+  const users = await prisma.user.findMany({ where: { id: { in: userIds } } })
+  const names = new Map(users.map((user) => [user.id, user.name]))
+  const nameOf = (id: string) => names.get(id) ?? sanitiseUsername(id)
+
+  return {
+    id: machine.id,
+    name: machine.name,
+    description: machine.description,
+    createdAt: machine.createdAt.toISOString(),
+    costPerWash: machine.costPerWash,
+    currency: machine.currency,
+    inviteCode: machine.inviteCode as string,
+    members: machine.users.map((user) => ({ userId: user.userId, name: nameOf(user.userId) })),
+    actions: machine.actions.map((action) => ({
+      id: action.id,
+      userId: action.userId,
+      actionType: action.actionType,
+      cost: action.cost,
+      date: action.date.toISOString(),
+    })),
+  }
 }
 
 export async function fetchMachinesForUser(userId: string): Promise<Array<Machine>> {
@@ -38,36 +132,82 @@ export async function fetchMachinesForUser(userId: string): Promise<Array<Machin
   return userMachineRelationships.map((relationship) => safeEncodeMachine(relationship.machine))
 }
 
-export async function createMachine(name: string, description: string, userId: string): Promise<Machine | null> {
-  const newMachine = {
-    name: name,
-    description: description,
-  }
-  const machine = await prisma.machine.create({ data: newMachine })
-  const newRelationship = {
-    userId: userId,
-    machineId: machine.id,
-    assignedBy: 'admin',
-  }
-  await prisma.usersOnMachines.create({ data: newRelationship })
+export async function createMachine(input: MachineInput, user: SessionUser): Promise<Machine> {
+  await ensureUser(user)
+  const machine = await prisma.machine.create({
+    data: {
+      ...input,
+      inviteCode: generateInviteCode(),
+      users: { create: { userId: user.sub, assignedBy: user.sub } },
+    },
+  })
   return safeEncodeMachine(machine)
 }
 
-export async function logAction(actionType: string, machineId: number, userId: string): Promise<Action | null> {
-  const newAction = {
-    machineId: machineId,
-    userId: userId,
-    actionType: actionType,
+// Changes the machine settings. Returns null if the user is not a member.
+export async function updateMachine(machineId: number, input: MachineInput, userId: string): Promise<Machine | null> {
+  if (!(await isMember(userId, machineId))) {
+    return null
   }
-  return await prisma.action.create({ data: newAction })
+  const machine = await prisma.machine.findUnique({ where: { id: machineId } })
+  if (!machine) {
+    return null
+  }
+  // Old entries keep their cost in the minor unit of the old currency, so a currency change would change old statements.
+  if (input.currency !== machine.currency) {
+    const pricedEntries = await prisma.action.count({ where: { machineId, cost: { gt: 0 } } })
+    if (pricedEntries > 0) {
+      throw new MachineInputError('You cannot change the currency after a wash with a cost is logged')
+    }
+  }
+  const updated = await prisma.machine.update({ where: { id: machineId }, data: input })
+  return safeEncodeMachine(updated)
 }
 
-function safeEncodeMachineWithActions(machine: MachineWithActions): MachineWithActions {
-  machine.createdAt = JSON.parse(safeJsonStringify(machine.createdAt))
-  machine.actions.forEach((action) => {
-    action.date = JSON.parse(safeJsonStringify(action.date))
+// Adds the user to the machine of the invite code. Returns the machine ID, or null for an unknown code.
+export async function joinMachine(inviteCode: string, user: SessionUser): Promise<number | null> {
+  const machine = await prisma.machine.findUnique({ where: { inviteCode } })
+  if (!machine) {
+    return null
+  }
+  await ensureUser(user)
+  await prisma.usersOnMachines.upsert({
+    where: { machineId_userId: { machineId: machine.id, userId: user.sub } },
+    create: { machineId: machine.id, userId: user.sub, assignedBy: 'invite' },
+    update: {},
   })
-  return machine
+  return machine.id
+}
+
+// Logs a cycle and stores the current cost per wash with it. Returns null if the user is not a member.
+export async function logAction(actionType: ActionType, machineId: number, user: SessionUser): Promise<ActionEntry | null> {
+  if (!(await isMember(user.sub, machineId))) {
+    return null
+  }
+  const machine = await prisma.machine.findUnique({ where: { id: machineId } })
+  if (!machine) {
+    return null
+  }
+  await ensureUser(user)
+  const action = await prisma.action.create({
+    data: {
+      machineId,
+      userId: user.sub,
+      actionType,
+      // A clean cycle is a care duty and costs nothing.
+      cost: actionType === 'wash' ? machine.costPerWash : 0,
+    },
+  })
+  return { ...action, date: action.date.toISOString() }
+}
+
+// Deletes an entry. Only the author of the entry can delete it, and only while the author is a member.
+export async function deleteAction(actionId: number, machineId: number, userId: string): Promise<boolean> {
+  if (!(await isMember(userId, machineId))) {
+    return false
+  }
+  const { count } = await prisma.action.deleteMany({ where: { id: actionId, machineId, userId } })
+  return count > 0
 }
 
 function safeEncodeMachine(machine: Machine): Machine {

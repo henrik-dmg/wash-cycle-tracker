@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server'
 import { withSessionEnsured } from '../../../../lib/session.utilities'
-import { createMachine } from '../../../../lib/machine.service'
+import { createMachine, MachineInputError, validateMachineInput } from '../../../../lib/machine.service'
 
 export const POST = withSessionEnsured(async (request, _context, session) => {
   try {
-    const body = await request.json()
-    const machine = await createMachine(body.name, body.description, session.user.sub)
+    const input = validateMachineInput(await request.json())
+    const machine = await createMachine(input, session.user)
     return NextResponse.json(machine)
   } catch (error) {
+    if (error instanceof MachineInputError) {
+      return NextResponse.json({ message: error.message }, { status: 400 })
+    }
     console.error(error)
     return NextResponse.json({ message: 'Something went wrong' }, { status: 500 })
   }

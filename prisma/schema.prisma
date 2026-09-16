@@ -12,6 +12,11 @@ model Machine {
   name        String
   description String
   createdAt   DateTime          @default(now())
+  // Price of one wash cycle in the minor unit of the currency (for example cents).
+  costPerWash Int               @default(0)
+  currency    String            @default("EUR")
+  // Secret code in the invite link. Old rows get a code when a member opens the machine.
+  inviteCode  String?           @unique
   users       UsersOnMachines[]
   actions     Action[]
 }
@@ -27,6 +32,8 @@ model Action {
   id         Int      @id @default(autoincrement())
   date       DateTime @default(now())
   actionType String
+  // Cost of this cycle at the time of the log, so a later price change does not change old statements.
+  cost       Int      @default(0)
   user       User     @relation(fields: [userId], references: [id])
   userId     String
   machine    Machine  @relation(fields: [machineId], references: [id])
