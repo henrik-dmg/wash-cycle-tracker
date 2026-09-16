@@ -27,6 +27,9 @@ RUN pnpm build
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+# A default that points at the data volume, so a plain `docker run` of the published image works.
+# DEPLOYMENT_MODE stays unset, so the image defaults to the deployment mode.
+ENV DATABASE_URL="file:/app/data/washing-machine.db"
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 --ingroup nodejs --home /home/nextjs --shell /bin/sh nextjs \
   && mkdir -p /home/nextjs /app/data \
