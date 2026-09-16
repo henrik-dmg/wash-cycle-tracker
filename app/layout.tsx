@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 import NavigationBar from '../components/navigationbar/NavigationBar'
 import { MachineStoreProvider } from '../lib/store/context'
+import { deploymentMode } from '../lib/deployment-mode'
 
 export const metadata: Metadata = {
   title: 'Washing Machine Server',
@@ -17,7 +18,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <div className="gradient-mesh" aria-hidden="true" />
         <MachineStoreProvider>
           <div className="min-h-screen">
-            <NavigationBar />
+            <NavigationBar mode={deploymentMode} />
             {children}
           </div>
           <Toaster position="bottom-center" />

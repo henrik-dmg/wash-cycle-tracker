@@ -6,8 +6,11 @@ import { useState } from 'react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import styles from './navigationbar.module.css'
 import { highlightableItem } from '../../lib/style.utilities'
+import type { DeploymentMode } from '../../lib/deployment-mode'
 
-const NavigationBar = () => {
+const GITHUB_URL = 'https://github.com/henrik-dmg/washing-machine-server'
+
+const NavigationBar = ({ mode }: { mode: DeploymentMode }) => {
   const pathname = usePathname()
   const [active, setActive] = useState(false)
 
@@ -31,9 +34,23 @@ const NavigationBar = () => {
         </button>
         <div className={`${active ? '' : 'hidden'} w-full lg:inline-flex lg:flex-grow lg:w-auto`}>
           <div className="lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start flex flex-col lg:h-auto gap-1 py-2 lg:py-0">
-            <Link href="/" className={`${styles.navbarItem} ${isMachinesCurrent ? styles.navbarItemActive : ''}`} onClick={handleClick}>
-              Machines
-            </Link>
+            {mode === 'deployment' ? (
+              <Link href="/" className={`${styles.navbarItem} ${isMachinesCurrent ? styles.navbarItemActive : ''}`} onClick={handleClick}>
+                Machines
+              </Link>
+            ) : (
+              <>
+                <Link href="/demo" className={styles.navbarItem} onClick={handleClick}>
+                  Demo
+                </Link>
+                <Link href="/#compose-form" className={styles.navbarItem} onClick={handleClick}>
+                  Compose form
+                </Link>
+                <a href={GITHUB_URL} target="_blank" rel="noreferrer" className={styles.navbarItem} onClick={handleClick}>
+                  GitHub
+                </a>
+              </>
+            )}
           </div>
         </div>
       </div>
