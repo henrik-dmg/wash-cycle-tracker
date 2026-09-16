@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import ComposeForm from './ComposeForm'
 
 const GITHUB_URL = 'https://github.com/henrik-dmg/washing-machine-server'
 
@@ -35,7 +36,7 @@ export default function LandingPage() {
       </section>
 
       <section id="compose-form" className="mx-auto max-w-2xl px-4 pb-24">
-        <div className="glass-card p-8 text-center text-zinc-500 dark:text-zinc-400">The Compose form is coming soon.</div>
+        <ComposeForm />
       </section>
     </main>
   )

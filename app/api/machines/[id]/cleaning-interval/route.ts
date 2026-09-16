@@ -1,9 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { apiNotFoundOutsideDeploymentMode } from '../../../../../lib/api-guard'
+import { guardApiRequest } from '../../../../../lib/api-guard'
 
 // Sets or clears the cleaning interval of a machine. The body is `{ "cleaningInterval": number | null }`.
 export async function PATCH(request: NextRequest, context: RouteContext<'/api/machines/[id]/cleaning-interval'>) {
-  const guard = apiNotFoundOutsideDeploymentMode()
+  const guard = guardApiRequest(request)
   if (guard) {
     return guard
   }

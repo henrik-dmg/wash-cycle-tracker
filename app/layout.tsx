@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import NavigationBar from '../components/navigationbar/NavigationBar'
 import { MachineStoreProvider } from '../lib/store/context'
 import { deploymentMode } from '../lib/deployment-mode'
+import { signInEnabled } from '../lib/sign-in'
 
 export const metadata: Metadata = {
   title: 'Washing Machine Server',
@@ -18,7 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <div className="gradient-mesh" aria-hidden="true" />
         <MachineStoreProvider>
           <div className="min-h-screen">
-            <NavigationBar mode={deploymentMode} />
+            <NavigationBar mode={deploymentMode} signInEnabled={signInEnabled} />
             {children}
           </div>
           <Toaster position="bottom-center" />
