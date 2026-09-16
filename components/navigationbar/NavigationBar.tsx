@@ -40,6 +40,9 @@ const NavigationBar = () => {
             >
               Machines
             </Link>
+            <Link href="/#self-host" className={styles.navbarItem} onClick={handleClick}>
+              Self-host
+            </Link>
             <Link
               href="/#pricing"
               className={`${styles.navbarItem} ${isCurrent('/pricing') ? styles.navbarItemActive : ''}`}
