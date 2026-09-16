@@ -32,3 +32,15 @@ The cookie is Secure when the request comes over HTTPS. Behind a reverse proxy t
 ## Docker
 
 `docker compose up -d` builds the image from source and starts the app on port 3000. The container applies the migrations when it starts. The SQLite database is in the `db-data` volume.
+
+## Marketing site deployment
+
+`render.yaml` sets up the "Deploy to Render" button for the tracker, so it must stay in `deployment` mode. The marketing site, at panhans.dev, runs as a separate Render web service, added by hand rather than through `render.yaml`:
+
+1. Create a new web service on Render, and connect this repository.
+2. Set the runtime to Docker, with `dockerfilePath` as `./Dockerfile`.
+3. Add one environment variable: `DEPLOYMENT_MODE` set to `marketing`.
+4. Choose the free plan, and add no disk, because marketing mode never opens the database.
+5. Add the custom domain under **Settings → Custom Domains**, and point a Cloudflare CNAME record at the hostname Render gives you.
+
+The free plan spins the service down after fifteen minutes without traffic, so the first visitor after an idle period waits about fifty seconds for the container to start.
