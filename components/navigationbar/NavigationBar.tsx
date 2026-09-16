@@ -47,6 +47,9 @@ const NavigationBar = ({ mode, signInEnabled }: { mode: DeploymentMode; signInEn
                 <Link href="/" className={`${styles.navbarItem} ${isMachinesCurrent ? styles.navbarItemActive : ''}`} onClick={handleClick}>
                   Machines
                 </Link>
+                <Link href="/help" className={`${styles.navbarItem} ${pathname === '/help' ? styles.navbarItemActive : ''}`} onClick={handleClick}>
+                  Help
+                </Link>
                 {signInEnabled && pathname !== '/login' && (
                   <button type="button" className={`${styles.navbarItem} cursor-pointer text-left`} onClick={handleSignOut}>
                     Sign out

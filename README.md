@@ -18,7 +18,7 @@ A self-hosted app for one person. It records the washes and cleanings of your wa
 
 `DEPLOYMENT_MODE` selects which site the app serves. It accepts `deployment` (the default) or `marketing`. Any other value stops the app at start with an error.
 
-- `deployment`: `/` is the tracker. The landing page and `/demo` return 404.
+- `deployment`: `/` is the tracker. `/help` shows a status block (the version, whether the database directory is writable, and whether `APP_PASSWORD` is set) and tips to update, back up and fix the deployment. The landing page and `/demo` return 404.
 - `marketing`: `/` is the landing page. All API routes, `/help` and `/login` return 404, the app never opens a database, and the container does not run migrations.
 
 ## Password
